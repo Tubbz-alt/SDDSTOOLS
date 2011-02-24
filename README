@@ -1,0 +1,56 @@
+------------------------------------------------------
+README
+======
+
+This directory contains various scripts for generating
+plots from SDDS files produced by Elegant simulations.
+
+- - -
+
+Script Usage And Description:
+
+ plot_scat.sh data.sdds xvar yvar \
+   [xlow] [xhigh] [ylow] [yhigh]
+ --> Generates scatter plot and
+     x and y projections.
+
+ plot_gauss.sh data.sdds xvar yvar \
+   [xlow] [xhigh] [ylow] [yhigh]
+ --> Generates scatter plot and
+     x and y projections with
+     gaussian fits.
+
+ plot_2dhist.sh data.sdds xvar yvar \
+   [conts] [xbins] [ybins] \
+   [xlow] [xhigh] [ylow] [yhigh]
+ --> Generates 2-D histogram.
+
+ plot_core.sh limit plot.sh data.sdds \
+   plot_arg1 plot_arg2 plot_arg3 etc.
+ --> Generates a plot using only the
+     core of the beam.
+
+ plot_twiss.sh data.twi [data.mag]
+ --> Generates a plot of the beta and
+     eta functions in x and y.
+
+ plot_line.sh data.mag [zoom]
+ --> Generates a plot of the beamline.
+
+ anal.sh data.sdds [data.ana]
+ --> Applies 'sddsanalyzebeam'.
+
+- - -
+
+NOTE: If the input data file ('data.sdds'
+      argument) ends in the extension
+      '.out' or '.sdds', it may be omitted.
+
+- - -
+
+See the scripts themselves for more details.
+
+- - -
+
+M.Litos 2011/2/24
+------------------------------------------------------
