@@ -1,0 +1,67 @@
+------------------------------------------------------
+README
+======
+
+This directory contains various scripts for running
+a Shower simulation.
+
+The main script that is called by the user is
+"sim_shower.sh".
+
+- - -
+
+Usage:
+
+ sim_shower.sh <input> <output> <geom> [limit]
+
+Example:
+
+ sim_shower.sh input.sdds output.sdds nc.geom 0.05
+
+- - -
+
+It takes an Elegant formatted SDDS file for input.
+
+- - -
+
+It produces an Elegant formatted SDDS file as output.
+
+- - -
+
+The geometry file to be used by Shower must be
+specified by the user. An example geometry file is
+provided and may be edited to suit the user's needs.
+
+The geometry file must contain the following line:
+
+ outputfile="%s.show"
+
+This line should be included in the definition of
+the collection volume.
+
+- - -
+
+The user may specify a limit for the momentum filter.
+The filter is automatically applied. If no limit is
+given, the default behavior approximates no filter
+at all.
+
+Particles satisfying
+
+ |dp/p| > limit
+
+are removed from the output.
+
+NOTE: The limit is not given as a percentage.
+
+- - -
+
+See the scripts themselves for more details.
+
+An example SDDS input file has been provided for
+convenience.
+
+- - -
+
+M.Litos 2011/2/23
+------------------------------------------------------

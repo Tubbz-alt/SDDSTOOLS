@@ -1,0 +1,32 @@
+!=================================================
+! Elegant deck for momentum filter.
+!=================================================
+
+&run_setup
+	lattice			 = ./filter.lte,
+        use_beamline             = FILTER,
+        output                   = "{echo $FILTOUT}",
+        p_central                = "{sddsanalyzebeam $FILTREF -pipe=out | sddsprintout -pipe=in -col=pAverage | awk '/[0-9]/ \{print $1\}'}",
+&end
+
+&run_control
+       n_steps = 1,
+&end
+
+&sdds_beam
+        input                     = "{echo $FILTIN}",
+        input_type                = "elegant",
+        sample_fraction           = 1.0,
+        p_lower                   = 0,
+        p_upper                   = 1e10,
+	reuse_bunch		  = 1
+&end
+
+&alter_elements
+	name        = FILT,
+	type        = PFILTER,
+	item	    = DELTALIMIT,
+	value	    = "{echo $FILTARG}"
+&end
+
+&track &end
