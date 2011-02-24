@@ -76,9 +76,6 @@ set output [lindex $argv 1]
 if ![file exists $input] {
     return -code error "not found: $input"
 }
-if [file exists $output] {
-    return -code error "exists: $output"
-}
 
 set reference "0 0 0 0"
 set positrons 0
