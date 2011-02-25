@@ -7,7 +7,7 @@
         use_beamline             = SHOWER,
         output                   = "{echo $SHOWOUT}",
 	expand_for		 = "{echo $SHOWIN}"
-!	p_central                = "{sddsanalyzebeam $FILTREF -pipe=out | sddsprintout -pipe=in -col=pAverage | awk '/[0-9]/ \{print $1\}'}",
+!	p_central                = "{sddsanalyzebeam $SHOWIN -pipe=out | sddsprintout -pipe=in -col=pAverage | awk '/[0-9]/ \{print $1\}'}",
 &end
 
 &run_control
