@@ -125,6 +125,9 @@ export FILTOUT=$output
 elegant $SHOWERSIM/filter.ele
 
 # clean up
+if [ -e $PWD/fort.8 ]; then
+    rm $PWD/fort.8
+fi
 if [ -e $input_base.show.tmp ]; then
     rm $input_base.show.tmp
 fi
