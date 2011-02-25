@@ -1,0 +1,25 @@
+!SHOWER SCRIPT (ZERO LENGTH):
+!=============================
+
+! example of "hard coded"
+! shower script element:
+! -----------------------
+!SHOW : SCRIPT     , &
+!       COMMAND    = "./sim_shower.sh %i %o %sp0 %np0", &
+!       ROOTNAME   = nc, &
+!       SP0        = ./nc.geom, &
+!       NP0        = 0.05, &
+!       KEEP_FILES = 1
+
+! empty shower script
+! element to be filled
+! in at run time:
+! -----------------------
+SHOW : SCRIPT       , &
+       COMMAND  = "", &
+       ROOTNAME = "", &
+       SP0      = "", &
+       NP0      = "", &
+       KEEP_FILES=1
+
+SHOWER: LINE=(SHOW)

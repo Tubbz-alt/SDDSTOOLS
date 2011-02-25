@@ -1,0 +1,54 @@
+!=================================================
+! Elegant deck for Shower SCRIPT element.
+!=================================================
+
+&run_setup
+	lattice			 = ./shower.lte,
+        use_beamline             = SHOWER,
+        output                   = "{echo $SHOWOUT}",
+	expand_for		 = "{echo $SHOWIN}"
+!	p_central                = "{sddsanalyzebeam $FILTREF -pipe=out | sddsprintout -pipe=in -col=pAverage | awk '/[0-9]/ \{print $1\}'}",
+&end
+
+&run_control
+       n_steps = 1,
+&end
+
+&sdds_beam
+        input                     = "{echo $SHOWIN}",
+        input_type                = "elegant",
+        sample_fraction           = 1.0,
+        p_lower                   = 0,
+        p_upper                   = 1e10,
+	reuse_bunch		  = 1
+&end
+
+&alter_elements
+	name        = SHOW,
+	type        = SCRIPT,
+	item	    = COMMAND,
+	string_value= "{echo $SHOWSCRIPT} %i %o %sp0 %np0"
+&end
+
+&alter_elements
+	name        = SHOW,
+	type        = SCRIPT,
+	item	    = ROOTNAME,
+	string_value= "{echo $SHOWROOT}"
+&end
+
+&alter_elements
+	name        = SHOW,
+	type        = SCRIPT,
+	item	    = SP0,
+	string_value= "{echo $SHOWGEOM}"
+&end
+
+&alter_elements
+	name        = SHOW,
+	type        = SCRIPT,
+	item	    = NP0,
+	value	    = "{echo $SHOWFILT}"
+&end
+
+&track &end
