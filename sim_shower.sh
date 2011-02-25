@@ -72,22 +72,22 @@ else
 fi
 
 # convert input elegant file to shower file
-if [ -e $input_base.show ]; then
-    rm $input_base.show
+if [ -e $input_base.show.tmp ]; then
+    rm $input_base.show.tmp
 fi
-./ele2show.sh $input $input_base.show
+./ele2show.sh $input $input_base.show.tmp
 
 # run shower
-shower $input_base.show -geometry=$geom -samples=1 -keep=electrons -root=$geom_base -summary >& $geom_base.log
+shower $input_base.show.tmp -geometry=$geom -samples=1 -keep=electrons -root=$geom_base -summary >& $geom_base.log
 
 # convert output shower file to elegant file
-if [ -e $geom_base.tmp ]; then
-    rm $geom_base.tmp
+if [ -e $geom_base.out.tmp ]; then
+    rm $geom_base.out.tmp
 fi
-./show2ele.sh $geom_base.show $geom_base.tmp
+./show2ele.sh $geom_base.show $geom_base.out.tmp
 
 # add temporal profile back into the output file
-./addt.sh $geom_base.tmp $input
+./addt.sh $geom_base.out.tmp $input
 
 # filter stray particles
 if [ -e $output ]; then
@@ -95,11 +95,20 @@ if [ -e $output ]; then
 fi
 export FILTREF=$input
 export FILTARG=$filt_arg
-export FILTIN=$geom_base.tmp
+export FILTIN=$geom_base.out.tmp
 export FILTOUT=$output
 elegant ./filter.ele
 
 # clean up
-if [ -e $geom_base.tmp ]; then
-    rm $geom_base.tmp
+if [ -e $geom_base.show ]; then
+    rm $geom_base.show
+fi
+if [ -e $geom_base.show.tmp ]; then
+    rm $geom_base.show.tmp
+fi
+if [ -e $geom_base.out.tmp ]; then
+    rm $geom_base.out.tmp
+fi
+if [ -e $geom_base.out.tmp~ ]; then
+    rm $geom_base.out.tmp~
 fi
