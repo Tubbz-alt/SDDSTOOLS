@@ -34,6 +34,13 @@
 #
 ###########################################
 
+# usage
+if ! [ $1 ]; then
+    echo "usage:"
+    echo "plot_twiss.sh data.twi [data.mag]"
+    exit 1
+fi
+
 # define variables from arguments
 twiss_base=${1%.*}
 twiss=$twiss_base.twi

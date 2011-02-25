@@ -56,6 +56,14 @@
 #
 ###########################################
 
+# usage
+if ! ( [ $1 ] && [ $2 ] && [ $3 ] ); then
+    echo "usage:"
+    echo "plot_scat.sh data.sdds xvar yvar"\
+         "[xlow] [xhigh] [ylow] [yhigh]"
+    exit 1
+fi
+
 # define variables from arguments
 data_base=${1%.*}
 xvar=$2

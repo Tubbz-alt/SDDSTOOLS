@@ -24,7 +24,7 @@
 # =====
 #
 # plot_core.sh limit plot.sh data.sdds \
-#   plot_arg1 plot_arg2 plot_arg3 (etc.)
+#   [plot_arg1] [plot_arg2] [plot_arg3] (etc.)
 #
 # -----------------------------------------
 #
@@ -73,6 +73,14 @@
 # |d|  < 5.0 * sigma_rms_d
 #
 ###########################################
+
+# usage
+if ! ( [ $1 ] && [ $2 ] && [ $3 ] );then
+    echo "usage:"
+    echo "plot_core.sh limit plot.sh data.sdds"\
+         "[plot_arg1] [plot_arg2] [plot_arg3] (etc.)"
+    exit 1
+fi
 
 # define variables from arguments
 limit=$1

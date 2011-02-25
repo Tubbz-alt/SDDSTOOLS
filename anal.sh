@@ -30,6 +30,13 @@
 #
 ###########################################
 
+# usage
+if ! [ $1 ]; then
+    echo "usage:"
+    echo "anal.sh data.sdds [data.ana]"
+    exit 1
+fi
+
 # define variables from arguments
 data_base=${1%.*}
 ana=$2

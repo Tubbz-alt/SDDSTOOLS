@@ -33,6 +33,13 @@
 #
 ###########################################
 
+# usage
+if ! [ $1 ]; then
+    echo "usage:"
+    echo "plot_line.sh data.mag [zoom]"
+    exit 1
+fi
+
 # define variables from arguments
 data_base=${1%.*}
 mag=$data_base.mag
