@@ -53,6 +53,14 @@
 #
 ##################################################
 
+# usage
+if ! ( [ $1 ] && [ $2 ] && [ $3 ] ); then
+    echo "usage:"
+    echo "sim_shower.sh input_file output_file"\
+         "geometry_file [delta_limit]"
+    exit 1
+fi
+
 # define variables from arguments
 input=$1
 output=$2

@@ -59,6 +59,14 @@
 #
 ##################################################
 
+# usage
+if ! ( [ $1 ] && [ $2 ] && [ $3 ] && [ $4 ] ); then
+    echo "usage:"
+    echo "metasim.sh script.sh input_file output_file"\
+         "geometry_file [delta_limit]"
+    exit 1
+fi
+
 # define variables from arguments
 script=$1
 input=$2
