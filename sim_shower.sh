@@ -51,6 +51,18 @@
 #
 #       outputfile="%s.show"
 #
+# ------------------------------------------------
+#
+# NOTE: Set the environment variable SHOWERSIM to this 
+#	directory if you plan on calling sim_shower.sh 
+#	from another directory. This can be done by    
+#	sourcing the SOURCEME file while inside this   
+#	directory.				       
+#						       
+#	e.g.:					       
+#						       
+#	. ./SOURCEME
+#
 ##################################################
 
 # usage
