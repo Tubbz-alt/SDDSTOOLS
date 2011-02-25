@@ -3,7 +3,7 @@
 !=================================================
 
 &run_setup
-	lattice			 = ./filter.lte,
+	lattice			 = "{echo $SHOWERSIM}/filter.lte",
         use_beamline             = FILTER,
         output                   = "{echo $FILTOUT}",
         p_central                = "{sddsanalyzebeam $FILTREF -pipe=out | sddsprintout -pipe=in -col=pAverage | awk '/[0-9]/ \{print $1\}'}",
