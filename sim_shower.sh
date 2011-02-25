@@ -108,6 +108,9 @@ export FILTOUT=$output
 elegant ./filter.ele
 
 # clean up
+if [ -e $input_base.show.tmp ]; then
+    rm $input_base.show.tmp
+fi
 if [ -e $geom_base.show ]; then
     rm $geom_base.show
 fi
