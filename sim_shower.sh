@@ -61,6 +61,11 @@ if ! ( [ $1 ] && [ $2 ] && [ $3 ] ); then
     exit 1
 fi
 
+# set SHOWERSIM directory, if not set
+if ! [ $SHOWERSIM ]; then
+    export SHOWERSIM=$PWD
+fi
+
 # define variables from arguments
 input=$1
 output=$2
@@ -83,7 +88,7 @@ fi
 if [ -e $input_base.show.tmp ]; then
     rm $input_base.show.tmp
 fi
-./ele2show.sh $input $input_base.show.tmp
+$SHOWERSIM/ele2show.sh $input $input_base.show.tmp
 
 # run shower
 shower $input_base.show.tmp -geometry=$geom -samples=1 -keep=electrons -root=$geom_base -summary >& $geom_base.log
@@ -92,10 +97,10 @@ shower $input_base.show.tmp -geometry=$geom -samples=1 -keep=electrons -root=$ge
 if [ -e $geom_base.out.tmp ]; then
     rm $geom_base.out.tmp
 fi
-./show2ele.sh $geom_base.show $geom_base.out.tmp
+$SHOWERSIM/show2ele.sh $geom_base.show $geom_base.out.tmp
 
 # add temporal profile back into the output file
-./addt.sh $geom_base.out.tmp $input
+$SHOWERSIM/addt.sh $geom_base.out.tmp $input
 
 # filter stray particles
 if [ -e $output ]; then
@@ -105,7 +110,7 @@ export FILTREF=$input
 export FILTARG=$filt_arg
 export FILTIN=$geom_base.out.tmp
 export FILTOUT=$output
-elegant ./filter.ele
+elegant $SHOWERSIM/filter.ele
 
 # clean up
 if [ -e $input_base.show.tmp ]; then
