@@ -97,7 +97,7 @@ if [ "$3" == "$data_base" ];then
 	data=$data_base.sdds
     fi
 else
-    data=$1
+    data=$3
 fi
 
 # clean up
