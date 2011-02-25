@@ -56,10 +56,45 @@ NOTE: The limit is not given as a percentage.
 
 - - -
 
-See the scripts themselves for more details.
+There is a script that runs Shower from inside
+Elegant using a SCRIPT element. This script is
+called "metasim.sh", and is for demonstrative
+purposes only.
 
-An example SDDS input file has been provided for
-convenience.
+It takes the same arguments as the "sim_shower.sh"
+script, as well as the name of the script to be
+used to run the Shower simulation (i.e.
+"sim_shower.sh").
+
+The SCRIPT element takes the current state of the
+beam and exports it to the Shower script, then
+takes the output from the Shower script and feeds
+it back into the Elegant beamline.
+
+- - -
+
+Usage:
+
+ metasim.sh <script.sh> <input> <output> <geom> [limit]
+
+Example:
+
+ metasim.sh sim_shower.sh input.sdds output.sdds nc.geom 0.05
+
+- - -
+
+The Elegant lattice file used by the "metasim.sh" script
+is called "shower.lte". Its contents can basically be
+cut and pasted into another lattice file, allowing for
+seamless integration of Elegant and Shower in a single
+simulation call.
+
+- - -
+
+See the scripts and files themselves for more details.
+
+An example SDDS input file and geometry file have been
+provided for convenience of testing.
 
 - - -
 
