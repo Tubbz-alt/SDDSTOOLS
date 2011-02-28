@@ -37,7 +37,7 @@
 #                Particles satisfying
 #                |dp/p| > delta_limit
 #                will be removed. Default value
-#                is 100, approximating no filter.
+#                is 10^6, approximating no filter.
 #                NOTE: The limit is not given as
 #                a percentage.
 #
@@ -83,36 +83,46 @@ input=$1
 output=$2
 geom=$3
 
-# set basenames for files
-input_base=${input%.*}
-output_base=${output%.*}
-geom_base=${geom%.*}
-
 # momentum filter argument;
 # use default value if not given
 if [ $4 ]; then
     filt_arg=$4
 else
-    filt_arg=100.0
+    filt_arg=1000000.0
+fi
+
+# set basenames for files
+input_base=${input%.*}
+input_base=${input_base##*/}
+output_base=${output%.*}
+output_base=${output_base##*/}
+geom_base=${geom%.*}
+geom_base=${geom_base##*/}
+
+# define working directory
+workdir=${output%.*}
+workdir=${workdir%/*}
+if [ "$workdir" == "$output_base" ]; then
+    workdir=$PWD
 fi
 
 # convert input elegant file to shower file
-if [ -e $input_base.show.tmp ]; then
-    rm $input_base.show.tmp
+if [ -e $workdir/$input_base.show.tmp ]; then
+    rm $workdir/$input_base.show.tmp
 fi
-$SHOWERSIM/ele2show.sh $input $input_base.show.tmp
+$SHOWERSIM/ele2show.sh $input $workdir/$input_base.show.tmp
 
 # run shower
-shower $input_base.show.tmp -geometry=$geom -samples=1 -keep=electrons -root=$geom_base -summary >& $geom_base.log
+shower $workdir/$input_base.show.tmp -geometry=$geom -samples=1 -keep=electrons -root=$workdir/$geom_base -summary >& $workdir/$geom_base.log
 
 # convert output shower file to elegant file
-if [ -e $geom_base.out.tmp ]; then
-    rm $geom_base.out.tmp
+if [ -e $workdir/$geom_base.out.tmp ]; then
+    rm $workdir/$geom_base.out.tmp
 fi
-$SHOWERSIM/show2ele.sh $geom_base.show $geom_base.out.tmp
+$SHOWERSIM/show2ele.sh $workdir/$geom_base.show $workdir/$geom_base.out.tmp
 
 # add temporal profile back into the output file
-$SHOWERSIM/addt.sh $geom_base.out.tmp $input
+$SHOWERSIM/addt.sh $workdir/$geom_base.out.tmp $input
 
 # filter stray particles
 if [ -e $output ]; then
@@ -120,7 +130,7 @@ if [ -e $output ]; then
 fi
 export FILTREF=$input
 export FILTARG=$filt_arg
-export FILTIN=$geom_base.out.tmp
+export FILTIN=$workdir/$geom_base.out.tmp
 export FILTOUT=$output
 elegant $SHOWERSIM/filter.ele
 
@@ -128,18 +138,18 @@ elegant $SHOWERSIM/filter.ele
 if [ -e $PWD/fort.8 ]; then
     rm $PWD/fort.8
 fi
-if [ -e $input_base.show.tmp ]; then
-    rm $input_base.show.tmp
+if [ -e $workdir/$input_base.show.tmp ]; then
+    rm $workdir/$input_base.show.tmp
 fi
-if [ -e $geom_base.show ]; then
-    rm $geom_base.show
+if [ -e $workdir/$geom_base.show ]; then
+    rm $workdir/$geom_base.show
 fi
-if [ -e $geom_base.show.tmp ]; then
-    rm $geom_base.show.tmp
+if [ -e $workdir/$geom_base.show.tmp ]; then
+    rm $workdir/$geom_base.show.tmp
 fi
-if [ -e $geom_base.out.tmp ]; then
-    rm $geom_base.out.tmp
+if [ -e $workdir/$geom_base.out.tmp ]; then
+    rm $workdir/$geom_base.out.tmp
 fi
-if [ -e $geom_base.out.tmp~ ]; then
-    rm $geom_base.out.tmp~
+if [ -e $workdir/$geom_base.out.tmp~ ]; then
+    rm $workdir/$geom_base.out.tmp~
 fi
