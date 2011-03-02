@@ -73,11 +73,6 @@ if ! ( [ $1 ] && [ $2 ] && [ $3 ] ); then
     exit 1
 fi
 
-# set SHOWERSIM directory, if not set
-if ! [ $SHOWERSIM ]; then
-    export SHOWERSIM=$PWD
-fi
-
 # define variables from arguments
 input=$1
 output=$2
@@ -89,6 +84,13 @@ if [ $4 ]; then
     filt_arg=$4
 else
     filt_arg=1000000.0
+fi
+
+# set directory locations
+
+# SHOWERSIM directory
+if ! [ $SHOWERSIM ]; then
+    SHOWERSIM=$PWD
 fi
 
 # set basenames for files
@@ -103,7 +105,7 @@ geom_base=${geom_base##*/}
 workdir=${output%.*}
 workdir=${workdir%/*}
 if [ "$workdir" == "$output_base" ]; then
-    workdir=$PWD
+    workdir=$SHOWERSIM
 fi
 
 # convert input elegant file to shower file
