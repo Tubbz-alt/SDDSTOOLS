@@ -1,0 +1,4 @@
+#!/bin/sh
+
+export SDDSTOOLS=$PWD
+export PATH=$PATH:$SDDSTOOLS
