@@ -122,11 +122,17 @@ sddsprocess $data_base.gauss -noWarnings \
  "-process=E,average,Ebar" \
  "-print=param,ELabel,E\$b0\$n=%.3g %s,Ebar,Ebar.units" \
  "-print=param,xrmsLabel,\$gs\$r\$bx\$n=%.3g %s,xrms,xrms.units" \
- "-print=param,xprmsLabel,\$gs\$r\$bxp\$n=%.3g %s,xprms,yprms.units" \
+ "-print=param,xprmsLabel,\$gs\$r\$bx'\$n=%.3g %s,xprms,yprms.units" \
  "-print=param,yrmsLabel,\$gs\$r\$by\$n=%.3g %s,yrms,yrms.units" \
- "-print=param,yprmsLabel,\$gs\$r\$byp\$n=%.3g %s,yprms,yprms.units" \
+ "-print=param,yprmsLabel,\$gs\$r\$by'\$n=%.3g %s,yprms,yprms.units" \
  "-print=param,zrmsLabel,\$gs\$r\$bz\$n=%.3g %s,zrms,zrms.units" \
- "-print=param,drmsLabel,\$gs\$r\$b\$gd\$r\$n=%.3g %s,drms,drms.units"
+ "-print=param,drmsLabel,\$gs\$r\$b\$gd\$rp/p\$n=%.3g %s,drms,drms.units" \
+ "-print=param,xLabel,x (%s),x.units" \
+ "-print=param,xpLabel,x' (%s),xp.units" \
+ "-print=param,yLabel,y (%s),y.units" \
+ "-print=param,ypLabel,y' (%s),yp.units" \
+ "-print=param,zLabel,z (%s),z.units" \
+ "-print=param,dLabel,\$gd\$rp/p (%s),d.units"
 
 # create histograms
 sddshist $data_base.gauss $data_base.xhis  -data=x  -bin=100
@@ -148,28 +154,23 @@ sddsgfit $data_base.dhis  dhis.gfit  -column=d,frequency
 sddsprocess xhis.gfit -noWarnings \
  "-print=param,Sxg,\$gs\$r\$bx\$n=%.3g %s,gfitSigma,gfitSigma.units"
 sddsprocess xphis.gfit -noWarnings \
- "-print=param,Sxpg,\$gs\$r\$bxp\$n=%.3g %s,gfitSigma,gfitSigma.units"
+ "-print=param,Sxpg,\$gs\$r\$bx'\$n=%.3g %s,gfitSigma,gfitSigma.units"
 sddsprocess yhis.gfit -noWarnings \
  "-print=param,Syg,\$gs\$r\$by\$n=%.3g %s,gfitSigma,gfitSigma.units"
 sddsprocess yphis.gfit -noWarnings \
- "-print=param,Sypg,\$gs\$r\$byp\$n=%.3g %s,gfitSigma,gfitSigma.units"
+ "-print=param,Sypg,\$gs\$r\$by'\$n=%.3g %s,gfitSigma,gfitSigma.units"
 sddsprocess zhis.gfit -noWarnings \
  "-print=param,Szg,\$gs\$r\$bz\$n=%.3g %s,gfitSigma,gfitSigma.units"
 sddsprocess dhis.gfit -noWarnings \
  "-print=param,Sdg,\$gs\$r\$b\$gd\$r\$n=%.3g %s,gfitSigma,gfitSigma.units"
 
-sddsxref $data_base.xhis  xhis.gfit  \
-    -transfer=parameter,Sxg,gfitSigma  -noWarning
-sddsxref $data_base.xphis xphis.gfit \
-    -transfer=parameter,Sxpg,gfitSigma -noWarning
-sddsxref $data_base.yhis  yhis.gfit  \
-    -transfer=parameter,Syg,gfitSigma  -noWarning
-sddsxref $data_base.yphis yphis.gfit \
-    -transfer=parameter,Sypg,gfitSigma -noWarning
-sddsxref $data_base.zhis  zhis.gfit  \
-    -transfer=parameter,Szg,gfitSigma  -noWarning
-sddsxref $data_base.dhis  dhis.gfit  \
-    -transfer=parameter,Sdg,gfitSigma  -noWarning
+# transfer labels
+sddsxref $data_base.${xvar}his ${xvar}his.gfit -noWarnings \
+    -transfer=parameter,S${xvar}g,gfitSigma \
+    -transfer=parameter,${xvar}Label,${xvar}rmsLabel
+sddsxref $data_base.${yvar}his ${yvar}his.gfit -noWarnings \
+    -transfer=parameter,S${yvar}g,gfitSigma \
+    -transfer=parameter,${yvar}Label,${yvar}rmsLabel
 
 # generate the plots
 sddsplot -groupby=fileindex \
@@ -177,14 +178,15 @@ sddsplot -groupby=fileindex \
   -layout=2,2,limit=3 \
   -column=${xvar},${yvar} $data_base.gauss -graph=dot,type=3 \
       -tag=1 -sparse=1 -topline=@ELabel \
+      -xlabel=@${xvar}Label -ylabel=@${yvar}Label \
   -column=frequency,${yvar} $data_base.${yvar}his \
       -graph=yimpulse,type=2 -unsup=x -xlabel=N \
-      -tag=2 -topline=@S${yvar}g \
+      -tag=2 -topline=@S${yvar}g -ylabel=@${yvar}Label \
   -column=frequencyFit,${yvar} ${yvar}his.gfit \
       -graph=line,type=4 -unsup=x -tag=2 \
   -column=${xvar},frequency $data_base.${xvar}his \
       -graph=impulse,type=1 -unsup=y -ylabel=N \
-      -tag=3 -topline=@S${xvar}g \
+      -tag=3 -topline=@S${xvar}g -xlabel=@${xvar}Label \
   -column=${xvar},frequencyFit ${xvar}his.gfit \
       -graph=line,type=5 -unsup=y -tag=3 \
 

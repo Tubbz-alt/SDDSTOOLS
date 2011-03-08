@@ -156,15 +156,32 @@ sddsprocess $data_base.tmp -noWarnings \
  "-print=param,yrmsLabel,\$gs\$r\$by\$n=%.3g %s,yrms,yrms.units" \
  "-print=param,yprmsLabel,\$gs\$r\$byp\$n=%.3g %s,yprms,yprms.units" \
  "-print=param,zrmsLabel,\$gs\$r\$bz\$n=%.3g %s,zrms,zrms.units" \
- "-print=param,drmsLabel,\$gs\$r\$b\$gd\$r\$n=%.3g %s,drms,drms.units"
+ "-print=param,drmsLabel,\$gs\$r\$b\$gd\$r\$n=%.3g %s,drms,drms.units" \
+ "-print=param,xLabel,x (%s),x.units" \
+ "-print=param,xpLabel,x' (%s),xp.units" \
+ "-print=param,yLabel,y (%s),y.units" \
+ "-print=param,ypLabel,y' (%s),yp.units" \
+ "-print=param,zLabel,z (%s),z.units" \
+ "-print=param,dLabel,\$gd\$rp/p (%s),d.units"
 
 # create 2-D histogram
 sddshist2d $data_base.tmp $data_base.2dhis \
     -col=$xvar,$yvar -xpar=$xbins -ypar=$ybins
 
+# transfer labels
+sddsxref $data_base.2dhis $data_base.tmp -noWarnings \
+    -transfer=parameter,ELabel \
+    -transfer=parameter,xLabel,xpLabel \
+    -transfer=parameter,yLabel,ypLabel \
+    -transfer=parameter,zLabel,dLabel  \
+    -transfer=parameter,xrmsLabel,xprmsLabel \
+    -transfer=parameter,yrmsLabel,yprmsLabel \
+    -transfer=parameter,zrmsLabel,drmsLabel
+
 # draw color plot of 2-D histogram
 sddscontour $data_base.2dhis -quantity=frequency \
-    -shade=32 -contours=$conts -topline=""
+    -shade=32 -contours=$conts -topline="" \
+    -xlabel=@${xvar}Label -ylabel=@${yvar}Label
 
 # clean up
 if [ -e $data_base.tmp ]; then

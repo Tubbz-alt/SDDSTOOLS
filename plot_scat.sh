@@ -124,7 +124,13 @@ sddsprocess $data_base.tmp -noWarnings \
  "-print=param,yrmsLabel,\$gs\$r\$by\$n=%.3g %s,yrms,yrms.units" \
  "-print=param,yprmsLabel,\$gs\$r\$byp\$n=%.3g %s,yprms,yprms.units" \
  "-print=param,zrmsLabel,\$gs\$r\$bz\$n=%.3g %s,zrms,zrms.units" \
- "-print=param,drmsLabel,\$gs\$r\$b\$gd\$r\$n=%.3g %s,drms,drms.units"
+ "-print=param,drmsLabel,\$gs\$r\$b\$gd\$r\$n=%.3g %s,drms,drms.units" \
+ "-print=param,xLabel,x (%s),x.units" \
+ "-print=param,xpLabel,x' (%s),xp.units" \
+ "-print=param,yLabel,y (%s),y.units" \
+ "-print=param,ypLabel,y' (%s),yp.units" \
+ "-print=param,zLabel,z (%s),z.units" \
+ "-print=param,dLabel,\$gd\$rp/p (%s),d.units"
 
 # create histograms
 sddshist $data_base.tmp $data_base.xhis  -data=x  -bin=100
@@ -140,12 +146,13 @@ sddsplot -groupby=fileindex \
   -layout=2,2,limit=3 \
   -column=${xvar},${yvar} $data_base.tmp -graph=dot,type=3 \
       -tag=1 -sparse=1 -topline=@ELabel \
+      -xlabel=@${xvar}Label -ylabel=@${yvar}Label \
   -column=frequency,${yvar} $data_base.${yvar}his \
       -graph=yimpulse,type=2 -unsup=x -xlabel=N \
-      -tag=2 \
+      -tag=2 -ylabel=@${yvar}Label \
   -column=${xvar},frequency $data_base.${xvar}his \
       -graph=impulse,type=1 -unsup=y -ylabel=N \
-      -tag=3 \
+      -tag=3 -xlabel=@${xvar}Label \
 
 # clean up
 rm $data_base.tmp*
