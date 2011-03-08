@@ -68,8 +68,8 @@
 if ! ( [ $1 ] && [ $2 ] && [ $3 ] ); then
     echo "usage:"
     echo "plot_2dhist.sh data.sdds xvar yvar"\
-         "[conts] [xbins] [ybins]"\
-         "[xlow] [xhigh] [ylow] [yhigh]"
+         "[xlow] [xhigh] [ylow] [yhigh]"\
+         "[conts] [xbins] [ybins]"
     exit 1
 fi
 
@@ -77,25 +77,25 @@ fi
 data_base=${1%.*}
 xvar=$2
 yvar=$3
-if [ $4 ]; then
-    conts=$4
+xlow=$4
+xhigh=$5
+ylow=$6
+yhigh=$7
+if [ $8 ]; then
+    conts=$8
 else
     conts=50
 fi
-if [ $5 ]; then
-    xbins=$5
+if [ $9 ]; then
+    xbins=$9
 else
     xbins=100
 fi
-if [ $6 ]; then
-    ybins=$6
+if [ ${10} ]; then
+    ybins=${10}
 else
     ybins=100
 fi
-xlow=$7
-xhigh=$8
-ylow=$9
-yhigh=${10}
 
 # get full data file name
 if [ "$1" == "$data_base" ];then
