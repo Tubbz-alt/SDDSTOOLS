@@ -3,7 +3,7 @@ import argparse
 import shlex
 from subprocess import call
 import os
-
+import pelegant
 
 def submitPelegant(elefile,cores,notify,email,log,verbose):
 	# Setting notify options
@@ -31,19 +31,6 @@ def submitPelegant(elefile,cores,notify,email,log,verbose):
 	# Run Command
 	call(shlex.split(maincommand))
 
-# Adds action to load email from $NOTIFY_EMAIL if possible
-class note_address(argparse.Action):
-	def __call__(self, parser, namespace, values, option_string=None):
-		if values==None:
-			try:
-				# Looks for $NOTIFY_EMAIL
-				values=os.environ['NOTIFY_EMAIL']
-				# Turns notifications on
-				namespace.notify=True
-			except:
-				raise argparse.ArgumentError(self,'expected one argument ($NOTIFY_EMAIL not set)')
-		setattr(namespace, self.dest, values)
-
 if __name__ == '__main__':
 	try:
 		email=os.environ['OTIFY_EMAIL']
@@ -62,7 +49,7 @@ if __name__ == '__main__':
 			help='Enable notification by email.  (Default goes to SLAC email account.)')
 	# Email argument must come after notify
 	# as it changes it in certain cases.
-	parser.add_argument('-e','--email', nargs='?', action=note_address,
+	parser.add_argument('-e','--email', nargs='?', action=pelegant.note_address,
 			help='Overrides which email account to send to.  If enabled, overrides notification flag.\n' \
 			'Searches for email in environment variable $NOTIFY_EMAIL.')
 
