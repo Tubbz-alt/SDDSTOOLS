@@ -6,18 +6,21 @@ import os
 
 
 def submitPelegant(elefile,cores,notify,email,log,verbose):
-	# Verbose message about email notification
-	if verbose: print("Email notification to " + email + "...\nRunning " + elefile + " with Pelegant...")
-
 	# Setting notify options
+	if verbose & (notify | (log==None)):
+			if email!=None:
+				print("Job completion email to: " + email + " ...")
+			else:
+				print("Job completion email to user email ...")
 	options=""
 	if notify: options=options + " -N"
 
-	# Setting log options
-	logstr='' if log==None else " -oo " + log
-
 	# Change email if given
 	if email!=None: options=options + " -u " + email
+
+	# Setting log options
+	if verbose & (log!=None): print("Log file: " + log + " ...")
+	logstr='' if log==None else " -oo " + log
 
 	# Concatenate command
 	maincommand="bsub -a mympi -q beamphysics" + logstr + " -n " + str(cores) + options + " Pelegant " + elefile
