@@ -117,14 +117,32 @@ $SHOWERSIM/ele2show.sh $input $workdir/$input_base.show.tmp
 # run shower
 shower $workdir/$input_base.show.tmp -geometry=$geom -samples=1 -keep=electrons -root=$workdir/$geom_base -summary >& $workdir/$geom_base.log
 
+# clean up
+if [ -e $PWD/fort.8 ]; then
+    rm $PWD/fort.8
+fi
+if [ -e $workdir/$input_base.show.tmp ]; then
+    rm $workdir/$input_base.show.tmp
+fi
+
 # convert output shower file to elegant file
 if [ -e $workdir/$geom_base.out.tmp ]; then
     rm $workdir/$geom_base.out.tmp
 fi
 $SHOWERSIM/show2ele.sh $workdir/$geom_base.show $workdir/$geom_base.out.tmp
 
+# clean up
+if [ -e $workdir/$geom_base.show ]; then
+    rm $workdir/$geom_base.show
+fi
+
 # add temporal profile back into the output file
 $SHOWERSIM/addt.sh $workdir/$geom_base.out.tmp $input
+
+# clean up
+if [ -e $workdir/$geom_base.out.tmp~ ]; then
+    rm $workdir/$geom_base.out.tmp~
+fi
 
 # filter stray particles
 if [ -e $output ]; then
@@ -137,21 +155,6 @@ export FILTOUT=$output
 elegant $SHOWERSIM/filter.ele
 
 # clean up
-if [ -e $PWD/fort.8 ]; then
-    rm $PWD/fort.8
-fi
-if [ -e $workdir/$input_base.show.tmp ]; then
-    rm $workdir/$input_base.show.tmp
-fi
-if [ -e $workdir/$geom_base.show ]; then
-    rm $workdir/$geom_base.show
-fi
-if [ -e $workdir/$geom_base.show.tmp ]; then
-    rm $workdir/$geom_base.show.tmp
-fi
 if [ -e $workdir/$geom_base.out.tmp ]; then
     rm $workdir/$geom_base.out.tmp
-fi
-if [ -e $workdir/$geom_base.out.tmp~ ]; then
-    rm $workdir/$geom_base.out.tmp~
 fi
