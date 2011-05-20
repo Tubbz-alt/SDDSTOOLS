@@ -2,6 +2,7 @@
 import argparse
 import shutil
 import os
+import sys
 
 def concatlte(inputfile,outputfile,verbose):
 # Concatenates into final run.lte
@@ -11,9 +12,19 @@ def concatlte(inputfile,outputfile,verbose):
 	# Concatenates files
 	if verbose: print("Concatenating prepend.lte, " + inputfile + ", and append.lte...")
 	filelist=['prepend.lte',inputfile,'append.lte']
-	filedest=open(outputfile,'w')
+	fileobj=[]
+	# Open files to write from (and make sure
+	# they can be opened!)
 	for curfile in filelist:
-		shutil.copyfileobj(open(curfile),filedest)
+		# temp=open(curfile)
+		try:
+			fileobj.append(open(curfile))
+		except:
+			print("File does not exist: " + curfile)
+			sys.exit()
+	filedest=open(outputfile,'w')
+	for curfile in fileobj:
+		shutil.copyfileobj(curfile,filedest)
 	filedest.close()
 
 if __name__ == '__main__':

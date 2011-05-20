@@ -3,6 +3,7 @@ import argparse
 import shlex
 from subprocess import call
 import os
+import sys
 
 def submitPelegant(elefile,cores,notify,email,log,verbose):
 	# Setting notify options
@@ -27,6 +28,9 @@ def submitPelegant(elefile,cores,notify,email,log,verbose):
 	# Diagnostic
 	print maincommand
 
+	if not (os.path.isfile(elefile)):
+		print("File does not exist: " + elefile)
+		sys.exit()
 	# Run Command
 	# call(shlex.split(maincommand))
 
