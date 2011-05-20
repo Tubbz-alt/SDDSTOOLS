@@ -3,15 +3,14 @@ import argparse
 import shlex
 from subprocess import call
 import os
-import pelegant
 
 def submitPelegant(elefile,cores,notify,email,log,verbose):
 	# Setting notify options
 	if verbose & (notify | (log==None)):
-			if email!=None:
-				print("Job completion email to: " + email + " ...")
-			else:
-				print("Job completion email to user email ...")
+		if email!=None:
+			print("Job completion email to: " + email + " ...")
+		else:
+			print("Job completion email to user email ...")
 	options=""
 	if notify: options=options + " -N"
 
@@ -26,18 +25,19 @@ def submitPelegant(elefile,cores,notify,email,log,verbose):
 	maincommand="bsub -a mympi -q beamphysics" + logstr + " -n " + str(cores) + options + " Pelegant " + elefile
 
 	# Diagnostic
-	# print maincommand
+	print maincommand
 
 	# Run Command
-	call(shlex.split(maincommand))
+	# call(shlex.split(maincommand))
 
 if __name__ == '__main__':
+	import pelegant
 	try:
 		email=os.environ['OTIFY_EMAIL']
 	except:
 		email=None
 	
-	parser=argparse.ArgumentParser(description='Process command line.')
+	parser=argparse.ArgumentParser(description='Submits Pelegant jobs to LSF queue beamphysics.')
 	parser.add_argument('-V',action='version',version='%(prog)s v0.1')
 	parser.add_argument('-v','--verbose', action='store_true', help='Verbose mode.')
 	parser.add_argument('-l','--log',nargs='?',const='run.log',help='Log file output.')

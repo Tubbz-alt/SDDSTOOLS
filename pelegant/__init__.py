@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 import os
 import argparse
+from concatlte import concatlte
+from submitPelegant import submitPelegant
+
+__all__=["submitPelegant","concatlte"]
 
 # Adds action to load email from $NOTIFY_EMAIL if possible
 class note_address(argparse.Action):
