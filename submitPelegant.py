@@ -4,6 +4,7 @@ import shlex
 from subprocess import call
 import os
 import sys
+import textwrap
 
 def submitPelegant(elefile,cores,notify,email,log,verbose):
 	# Setting notify options
@@ -19,20 +20,29 @@ def submitPelegant(elefile,cores,notify,email,log,verbose):
 	if email!=None: options=options + " -u " + email
 
 	# Setting log options
-	if verbose & (log!=None): print("Log file: " + log + " ...")
+	if verbose:
+		if (log!=None):
+			print("Log file: " + log + " ...")
+		else:
+			print("No log generated ...")
 	logstr='' if log==None else " -oo " + log
 
+	if verbose:
+		print(textwrap.dedent('''\
+			Submitting Pelegant run to queue \"beamphysics\":
+				Deck file: %s
+				Cores: %i''' % (elefile,cores)))
 	# Concatenate command
 	maincommand="bsub -a mympi -q beamphysics" + logstr + " -n " + str(cores) + options + " Pelegant " + elefile
 
 	# Diagnostic
-	print maincommand
+	# print maincommand
 
 	if not (os.path.isfile(elefile)):
 		print("File does not exist: " + elefile)
 		sys.exit()
 	# Run Command
-	# call(shlex.split(maincommand))
+	call(shlex.split(maincommand))
 
 if __name__ == '__main__':
 	import pelegant
