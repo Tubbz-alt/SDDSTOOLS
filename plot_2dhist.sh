@@ -144,7 +144,9 @@ sddsprocess $data_base.tmp -noWarnings \
  "-process=y,standardDeviation,yrms" \
  "-process=yp,standardDeviation,yprms" \
  "-process=z,standardDeviation,zrms" \
- "-process=d,standardDeviation,drms"
+ "-process=d,standardDeviation,drms" \
+ "-process=t,standardDeviation,trms" \
+ "-process=p,standardDeviation,prms"
 
 # create labels
 sddsprocess $data_base.tmp -noWarnings \
@@ -162,7 +164,9 @@ sddsprocess $data_base.tmp -noWarnings \
  "-print=param,yLabel,y (%s),y.units" \
  "-print=param,ypLabel,y' (%s),yp.units" \
  "-print=param,zLabel,z (%s),z.units" \
- "-print=param,dLabel,\$gd\$rp/p (%s),d.units"
+ "-print=param,dLabel,\$gd\$rp/p (%s),d.units" \
+ "-print=param,tLabel,t (%s),t.units" \
+ "-print=param,pLabel,p (%s),p.units"
 
 # create 2-D histogram
 sddshist2d $data_base.tmp $data_base.2dhis \
@@ -174,9 +178,11 @@ sddsxref $data_base.2dhis $data_base.tmp -noWarnings \
     -transfer=parameter,xLabel,xpLabel \
     -transfer=parameter,yLabel,ypLabel \
     -transfer=parameter,zLabel,dLabel  \
+    -transfer=parameter,tLabel,pLabel \
     -transfer=parameter,xrmsLabel,xprmsLabel \
     -transfer=parameter,yrmsLabel,yprmsLabel \
-    -transfer=parameter,zrmsLabel,drmsLabel
+    -transfer=parameter,zrmsLabel,drmsLabel \
+    -transfer=parameter,trmsLabel,prmsLabel \
 
 # draw color plot of 2-D histogram
 sddscontour $data_base.2dhis -quantity=frequency \

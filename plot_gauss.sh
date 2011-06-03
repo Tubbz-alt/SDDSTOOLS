@@ -114,7 +114,9 @@ sddsprocess $data_base.gauss -noWarnings \
  "-process=y,standardDeviation,yrms" \
  "-process=yp,standardDeviation,yprms" \
  "-process=z,standardDeviation,zrms" \
- "-process=d,standardDeviation,drms"
+ "-process=d,standardDeviation,drms" \
+ "-process=t,standardDeviation,trms" \
+ "-process=p,standardDeviation,prms"
 
 # create labels
 sddsprocess $data_base.gauss -noWarnings \
@@ -132,7 +134,9 @@ sddsprocess $data_base.gauss -noWarnings \
  "-print=param,yLabel,y (%s),y.units" \
  "-print=param,ypLabel,y' (%s),yp.units" \
  "-print=param,zLabel,z (%s),z.units" \
- "-print=param,dLabel,\$gd\$rp/p (%s),d.units"
+ "-print=param,dLabel,\$gd\$rp/p (%s),d.units" \
+ "-print=param,tLabel,t (%s),t.units" \
+ "-print=param,pLabel,p (%s),p.units"
 
 # create histograms
 sddshist $data_base.gauss $data_base.xhis  -data=x  -bin=100
@@ -141,6 +145,8 @@ sddshist $data_base.gauss $data_base.yhis  -data=y  -bin=100
 sddshist $data_base.gauss $data_base.yphis -data=yp -bin=100
 sddshist $data_base.gauss $data_base.zhis  -data=z  -bin=100
 sddshist $data_base.gauss $data_base.dhis  -data=d  -bin=100
+sddshist $data_base.gauss $data_base.this  -data=t  -bin=100
+sddshist $data_base.gauss $data_base.phis  -data=p  -bin=100
 
 # perform gaussian fits
 sddsgfit $data_base.xhis  xhis.gfit  -column=x,frequency
@@ -149,6 +155,8 @@ sddsgfit $data_base.yhis  yhis.gfit  -column=y,frequency
 sddsgfit $data_base.yphis yphis.gfit -column=yp,frequency
 sddsgfit $data_base.zhis  zhis.gfit  -column=z,frequency
 sddsgfit $data_base.dhis  dhis.gfit  -column=d,frequency
+sddsgfit $data_base.this  this.gfit  -column=t,frequency
+sddsgfit $data_base.phis  phis.gfit  -column=p,frequency
 
 # create labels from fits
 sddsprocess xhis.gfit -noWarnings \
@@ -163,6 +171,10 @@ sddsprocess zhis.gfit -noWarnings \
  "-print=param,Szg,\$gs\$r\$bz\$n=%.3g %s,gfitSigma,gfitSigma.units"
 sddsprocess dhis.gfit -noWarnings \
  "-print=param,Sdg,\$gs\$r\$b\$gd\$r\$n=%.3g %s,gfitSigma,gfitSigma.units"
+sddsprocess this.gfit -noWarnings \
+ "-print=param,Stg,\$gs\$r\$bt'\$n=%.3g %s,gfitSigma,gfitSigma.units"
+sddsprocess phis.gfit -noWarnings \
+ "-print=param,Spg,\$gs\$r\$bp'\$n=%.3g %s,gfitSigma,gfitSigma.units"
 
 # transfer labels
 sddsxref $data_base.${xvar}his ${xvar}his.gfit -noWarnings \

@@ -37,7 +37,7 @@
 #             the y-axis.
 #
 # Possible values for 'xvar' and 'yvar':
-#   x, xp, y, yp, z, d
+#   x, xp, y, yp, z, d, t, p
 #   where xp = x', yp = y', and d = dp/p
 #
 # xlow      : Lower bound on x-axis.
@@ -53,6 +53,8 @@
 #   x,y,z: mm
 #   xp,yp: mrad
 #   d    : %
+#   t    : s
+#   p    : MeV/c
 #
 ###########################################
 
@@ -112,7 +114,9 @@ sddsprocess $data_base.tmp -noWarnings \
  "-process=y,standardDeviation,yrms" \
  "-process=yp,standardDeviation,yprms" \
  "-process=z,standardDeviation,zrms" \
- "-process=d,standardDeviation,drms"
+ "-process=d,standardDeviation,drms" \
+ "-process=t,standardDeviation,trms" \
+ "-process=p,standardDeviation,prms"
 
 # create labels
 sddsprocess $data_base.tmp -noWarnings \
@@ -125,12 +129,16 @@ sddsprocess $data_base.tmp -noWarnings \
  "-print=param,yprmsLabel,\$gs\$r\$byp\$n=%.3g %s,yprms,yprms.units" \
  "-print=param,zrmsLabel,\$gs\$r\$bz\$n=%.3g %s,zrms,zrms.units" \
  "-print=param,drmsLabel,\$gs\$r\$b\$gd\$r\$n=%.3g %s,drms,drms.units" \
+ "-print=param,trmsLabel,\$gs\$r\$bt\$n=%.3g %s,trms,trms.units" \
+ "-print=param,prmsLabel,\$gs\$r\$bp\$n=%.3g %s,prms,prms.units" \
  "-print=param,xLabel,x (%s),x.units" \
  "-print=param,xpLabel,x' (%s),xp.units" \
  "-print=param,yLabel,y (%s),y.units" \
  "-print=param,ypLabel,y' (%s),yp.units" \
  "-print=param,zLabel,z (%s),z.units" \
- "-print=param,dLabel,\$gd\$rp/p (%s),d.units"
+ "-print=param,dLabel,\$gd\$rp/p (%s),d.units" \
+ "-print=param,tLabel,t (%s),t.units" \
+ "-print=param,pLabel,p (%s),p.units"
 
 # create histograms
 sddshist $data_base.tmp $data_base.xhis  -data=x  -bin=100
@@ -139,6 +147,8 @@ sddshist $data_base.tmp $data_base.yhis  -data=y  -bin=100
 sddshist $data_base.tmp $data_base.yphis -data=yp -bin=100
 sddshist $data_base.tmp $data_base.zhis  -data=z  -bin=100
 sddshist $data_base.tmp $data_base.dhis  -data=d  -bin=100
+sddshist $data_base.tmp $data_base.this  -data=t  -bin=100
+sddshist $data_base.tmp $data_base.phis  -data=p  -bin=100
 
 # generate the plots
 sddsplot -groupby=fileindex \
@@ -158,4 +168,3 @@ sddsplot -groupby=fileindex \
 rm $data_base.tmp
 rm $data_base.tmp~
 rm $data_base.*his
-rm $data_base.*his~
