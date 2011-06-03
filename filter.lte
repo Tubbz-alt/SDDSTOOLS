@@ -1,4 +1,0 @@
-!MOMENTUM FILTER (ZERO LENGTH):
-!=============================
-FILT  : PFILTER,DELTALIMIT=100.0
-FILTER: LINE=(FILT)
