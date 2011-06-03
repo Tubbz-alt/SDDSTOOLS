@@ -184,9 +184,7 @@ sddscontour $data_base.2dhis -quantity=frequency \
     -xlabel=@${xvar}Label -ylabel=@${yvar}Label
 
 # clean up
-if [ -e $data_base.tmp ]; then
-    rm $data_base.tmp
-fi
-if [ -e $data_base.2dhis ]; then
-    rm $data_base.2dhis
-fi
+rm $data_base.tmp
+rm $data_base.tmp~
+rm $data_base.2dhis
+rm $data_base.2dhis~

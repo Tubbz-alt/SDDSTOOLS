@@ -155,5 +155,7 @@ sddsplot -groupby=fileindex \
       -tag=3 -xlabel=@${xvar}Label \
 
 # clean up
-rm $data_base.tmp*
-rm $data_base.*his*
+rm $data_base.tmp
+rm $data_base.tmp~
+rm $data_base.*his
+rm $data_base.*his~

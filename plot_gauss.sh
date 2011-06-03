@@ -191,6 +191,9 @@ sddsplot -groupby=fileindex \
       -graph=line,type=5 -unsup=y -tag=3 \
 
 # clean up
-rm $data_base.gauss*
-rm $data_base.*his*
-rm *his.gfit*
+rm $data_base.gauss
+rm $data_base.gauss~
+rm $data_base.*his
+rm $data_base.*his~
+rm *his.gfit
+rm *his.gfit~
