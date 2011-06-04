@@ -52,23 +52,25 @@ mod=$1
 # contains parent particles
 ref=$2
 
-# Create new column 'tmpID' which matches daughter
+# Create new column 'Particle' which matches daughter
 # particles to parent particles:
-# ('i_row' of parent = 'particleID' of daughter)
+# ('i_row' of parent = 'Particle' of daughter)
 sddsprocess $ref -noWarning \
-    "-define=column,tmpID,i_row,type=long"
-sddsprocess $mod -noWarning \
-    "-define=column,tmpID,particleID,type=long"
+    "-define=column,Particle,i_row,type=long" \
+    "-define=parameter,Cperpart,Charge n_rows /,type=double"
 
 # Take time variable 't' from parent particle and
 # add 'deltat' (time to traverse Shower geometry).
-# Also transfer 'pCentral' and define 'Particles'.
+# Also transfer 'pCentral' from reference file,
+# and define parameters 'Particles' and 'Charge'.
 sddsxref $mod $ref -noWarning \
-    -equate=tmpID -reuse=rows -take=t \
-    -transfer=parameter,pCentral
+    -equate=Particle -reuse=rows -take=t,particleID \
+    -transfer=parameter,pCentral \
+    -transfer=parameter,Cperpart
 sddsprocess $mod -noWarning \
-    "-define=parameter,Particles,n_rows,type=long" \
     "-redefine=column,t,t deltat +,units=s" \
+    "-define=parameter,Particles,n_rows,type=long" \
+    "-define=parameter,Charge,Cperpart Particles *,type=double"
 
 # clean up
 rm $mod~

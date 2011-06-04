@@ -5,7 +5,7 @@
 # filter.sh
 # =======
 #
-# Applies longitudinal (temporal and energetic)
+# Applies longitudinal (time and momentum)
 # filter to an sdds beam file.
 #
 # ------------------------------------------------
