@@ -13,40 +13,47 @@
 # Usage
 # =====
 #
-# filter.sh input_file [output_file]
+# filter.sh input_file output_file
 #
 # ------------------------------------------------
 #
 # Arguments
 # =========
 #
-# input_file : Elegant formatted sdds file to
-#              which the filter will be applied.
+# input_file    : Elegant formatted sdds file to
+#                 which the filter will be applied.
 #
-# output_file: Elegant formatted sdds file that
-#              is the result of the filter.
+# output_file   : Elegant formatted sdds file that
+#                 is the result of the filter.
+#
+# NOTE: output_file must be unique from input_file.
 #
 ##################################################
 
 # usage
-if ! ( [ $1 ] ); then
+if ! ( [ $1 ] && [ $2 ] ); then
     echo "usage:"
-    echo "addt.sh input_file [output_file]"
+    echo "addt.sh input_file output_file"
     exit 1
 fi
 
 input=$1
-# if output file is not specified,
-# set equal to input file
-if ! ( [ $2 ] ); then
-    output=$1
-else
-    output=$2
-fi
+output=$2
 
-# filter by time and momentum->
+# get values for pCentral +/- 10%
+pC=`sddsprintout $input -par=pCentral | awk '/pCentral/ {print $4}'`
+pC_low=`rpnl $pC 0.90 mult`
+pC_high=`rpnl $pC 1.10 mult`
+
+# first filter by momentum:
+# pCentral-10% < p < pCentral+10%
+# then filter by time and momentum->
 # remove particles outside of 10 std. dev.
-sddsoutlier $input $output -noWarnings \
+sddsoutlier $input -pipe=out -noWarnings \
+    -columns=p \
+    -minimumLimit=$pC_low \
+    -maximumLimit=$pC_high \
+    | sddsoutlier -pipe=in $output -noWarnings \
     -columns=t,p -stDevLimit=10.0
 
 # clean up
