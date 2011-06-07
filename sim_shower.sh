@@ -17,7 +17,7 @@
 # =====
 #
 # sim_shower.sh input_file output_file \
-#   geometry_file [delta_limit]
+#   geometry_file
 #
 # ------------------------------------------------
 #
@@ -32,14 +32,6 @@
 #
 # geometry_file: File specifying the geometry to be
 #                used in Shower simulation.
-#
-# delta_limit  : Argument for momentum filter.
-#                Particles satisfying
-#                |dp/p| > delta_limit
-#                will be removed. Default value
-#                is 10^6, approximating no filter.
-#                NOTE: The limit is not given as
-#                a percentage.
 #
 # ------------------------------------------------
 #
@@ -69,7 +61,7 @@
 if ! ( [ $1 ] && [ $2 ] && [ $3 ] ); then
     echo "usage:"
     echo "sim_shower.sh input_file output_file"\
-         "geometry_file [delta_limit]"
+         "geometry_file"
     exit 1
 fi
 
@@ -77,14 +69,6 @@ fi
 input=$1
 output=$2
 geom=$3
-
-# momentum filter argument;
-# use default value if not given
-if [ $4 ]; then
-    filt_arg=$4
-else
-    filt_arg=1000000.0
-fi
 
 # set directory locations
 

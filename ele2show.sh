@@ -51,7 +51,7 @@ else
     type='electrons'
 fi
 
-# NOTE: Sets 'z' equal to '0' for all particles.
+# NOTE: Set 'z' equal to '0' for all particles.
 #       Columns 'u' and 'v' are normalized angles.
 sddsprocess $input -pipe=out \
     "-define=column,w,xp sqr yp sqr + 1 + sqrt rec" \
