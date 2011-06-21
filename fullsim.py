@@ -26,28 +26,28 @@ if __name__ == '__main__':
 	# ==========================================
 	# Basic Arguments
 	parser.add_argument('-V',action='version',version='%(prog)s v0.1')
-	parser.add_argument('--dv','--verbose',dest='verbose', action='store_false', help='Disable verbose mode.')
+	parser.add_argument('-dv','-verbose',dest='verbose', action='store_false', help='Disable verbose mode.')
 
 	# submitPelegant options
-	parser.add_argument('-l','--log',default='run.log',
+	parser.add_argument('-l','-log',default='run.log',
 		help='Log file output.')
-	parser.add_argument('-d','--deck',default='facet.ele',
+	parser.add_argument('-d','-deck',default='facet.ele',
 		help='Elegant input deck.')
-	parser.add_argument('-n','--number',type=int, default=10,
+	parser.add_argument('-n','-number',type=int, default=10,
 		help='Number of cores to use.')
-	parser.add_argument('--dN','--disablenotify',dest='notify',action='store_false',default=True,
+	parser.add_argument('-dN','-disablenotify',dest='notify',action='store_false',default=True,
 		help='Disable notification by email.  (Default goes to $NOTIFY_EMAIL or SLAC email account.)')
 	try:
 		notifyEmail=os.environ['NOTIFY_EMAIL']
 	except:
 		notifyEmail=None;
-	parser.add_argument('-e','--email',default=notifyEmail,
-		help='Overrides which email account to send to.  Default is to try to send to $NOTIFY_EMAIL.  Use --dN to disable email.')
+	parser.add_argument('-e','-email',default=notifyEmail,
+		help='Overrides which email account to send to.  Default is to try to send to $NOTIFY_EMAIL.  Use -dN to disable email.')
 
 	# Concatlte arguments
-	parser.add_argument('--il','--inlat','--inlattice',default='facet_v27.3_4mmR56.lte',
+	parser.add_argument('-il','-inlat','-inlattice',default='facet_v27.3_4mmR56.lte',
 		help='Yuri\'s lattice.')
-	parser.add_argument('--ol','--outlat','--outlattice',default='run.lte',
+	parser.add_argument('-ol','-outlat','-outlattice',default='run.lte',
 		help='Output filename for concatenated lattice.')
 
 	# Parse command line
