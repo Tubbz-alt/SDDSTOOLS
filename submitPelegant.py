@@ -17,7 +17,7 @@ def submitPelegant(elefile,cores,notify,email,log,verbose):
 	if notify: options=options + " -N"
 
 	# Change email if given
-	if email!=None: options=options + " -u " + email
+	if email!=None: options=options + " -u" + email
 
 	# Setting log options
 	if verbose:
@@ -25,7 +25,7 @@ def submitPelegant(elefile,cores,notify,email,log,verbose):
 			print("Log file: " + log + " ...")
 		else:
 			print("No log generated ...")
-	logstr='' if log==None else " -oo " + log
+	logstr='' if log==None else " -oo" + log
 
 	if verbose:
 		print(textwrap.dedent('''\
