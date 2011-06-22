@@ -25,7 +25,7 @@ def submitPelegant(elefile,cores,notify,email,log,verbose):
 			print("Log file: " + log + " ...")
 		else:
 			print("No log generated ...")
-	logstr='' if log==None else " -oo" + log
+	logstr='' if log==None else " -oo " + log
 
 	if verbose:
 		print(textwrap.dedent('''\
