@@ -53,8 +53,12 @@ sddsoutlier $input -pipe=out -noWarnings \
     -columns=p \
     -minimumLimit=$pC_low \
     -maximumLimit=$pC_high \
-    | sddsoutlier -pipe=in $output -noWarnings \
-    -columns=t,p -stDevLimit=10.0
+    | sddsoutlier -pipe -noWarnings \
+    -columns=t,p -stDevLimit=10.0 \
+    | sddsprocess -pipe -noWarning \
+    -redefine=parameter,Particles,n_rows \
+    | sddsprocess -pipe=in $output -noWarning \
+    "-redefine=parameter,Charge,Cperpart Particles mult"
 
 # clean up
 if [ -e $input~ ]; then
