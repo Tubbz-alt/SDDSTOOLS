@@ -31,7 +31,7 @@ if __name__ == '__main__':
 	parser=argparse.ArgumentParser(description=
 			'Concatenates lattice files into one file to be used in a Pelegant simulation.')
 	parser.add_argument('-V',action='version',version='%(prog)s v0.1')
-	parser.add_argument('-v','-verbose',action='store_true',
+	parser.add_argument('-v','--verbose',action='store_true',
 			help='Verbose mode.')
 	parser.add_argument('inputfile',
 			help='Yuri\'s lattice.')

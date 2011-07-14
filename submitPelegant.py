@@ -25,7 +25,7 @@ def submitPelegant(elefile,cores,notify,email,log,verbose):
 			print("Log file: " + log + " ...")
 		else:
 			print("No log generated ...")
-	logstr='' if log==None else " -oo" + log
+	logstr='' if log==None else " -oo " + log
 
 	if verbose:
 		print(textwrap.dedent('''\
@@ -53,17 +53,17 @@ if __name__ == '__main__':
 	
 	parser=argparse.ArgumentParser(description='Submits Pelegant jobs to LSF queue beamphysics.')
 	parser.add_argument('-V',action='version',version='%(prog)s v0.1')
-	parser.add_argument('-v','-verbose', action='store_true', help='Verbose mode.')
-	parser.add_argument('-l','-log',nargs='?',const='run.log',help='Log file output.')
+	parser.add_argument('-v','--verbose', action='store_true', help='Verbose mode.')
+	parser.add_argument('-l','--log',nargs='?',const='run.log',help='Log file output.')
 	parser.add_argument('deck',action='store',nargs='?',default='facet.ele',
 			help='Elegant input deck.')
-	parser.add_argument('-n','-number', action='store', type=int, default=10,
+	parser.add_argument('-n','--number', action='store', type=int, default=10,
 			help='Number of cores to use.')
-	parser.add_argument('-N','-notify', action='store_true',default=False,
+	parser.add_argument('-N','--notify', action='store_true',default=False,
 			help='Enable notification by email.  (Default goes to SLAC email account.)')
 	# Email argument must come after notify
 	# as it changes it in certain cases.
-	parser.add_argument('-e','-email', nargs='?', action=pelegant.note_address,
+	parser.add_argument('-e','--email', nargs='?', action=pelegant.note_address,
 			help='Overrides which email account to send to.  If enabled, overrides notification flag.\n' \
 			'Searches for email in environment variable $NOTIFY_EMAIL.')
 
