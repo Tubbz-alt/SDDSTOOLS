@@ -13,7 +13,7 @@
 # Usage
 # =====
 #
-# filter.sh input_file [output_file]
+# filter.sh input_file output_file
 #
 # ------------------------------------------------
 #
@@ -33,7 +33,7 @@
 # usage
 if ! ( [ $1 ] ); then
     echo "usage:"
-    echo "addt.sh input_file [output_file]"
+    echo "addt.sh input_file output_file"
     exit 1
 fi
 
