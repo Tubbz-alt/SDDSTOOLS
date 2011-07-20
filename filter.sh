@@ -13,7 +13,7 @@
 # Usage
 # =====
 #
-# filter.sh input_file output_file
+# filter.sh input_file [output_file]
 #
 # ------------------------------------------------
 #
@@ -31,9 +31,9 @@
 ##################################################
 
 # usage
-if ! ( [ $1 ] && [ $2 ] ); then
+if ! ( [ $1 ] ); then
     echo "usage:"
-    echo "addt.sh input_file output_file"
+    echo "addt.sh input_file [output_file]"
     exit 1
 fi
 
@@ -42,8 +42,8 @@ output=$2
 
 # get values for pCentral +/- 10%
 pC=`sddsprintout $input -par=pCentral | awk '/pCentral/ {print $4}'`
-pC_low=`rpnl $pC 0.90 mult`
-pC_high=`rpnl $pC 1.10 mult`
+pC_low=`rpnl $pC 0.95 mult`
+pC_high=`rpnl $pC 1.05 mult`
 
 # first filter by momentum:
 # pCentral-10% < p < pCentral+10%
@@ -56,7 +56,7 @@ sddsoutlier $input -pipe=out -noWarnings \
     | sddsoutlier -pipe -noWarnings \
     -columns=t,p -stDevLimit=10.0 \
     | sddsprocess -pipe -noWarning \
-    -redefine=parameter,Particles,n_rows \
+    -redefine=parameter,Particles,n_rows,type=long \
     | sddsprocess -pipe=in $output -noWarning \
     "-redefine=parameter,Charge,Cperpart Particles mult"
 
