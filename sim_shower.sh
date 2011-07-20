@@ -101,7 +101,7 @@ fi
 $SHOWERSIM/ele2show.sh $input $workdir/$input_base.show.tmp
 
 # run shower
-shower $workdir/$input_base.show.tmp -geometry=$geom -samples=1 -keep=electrons -root=$workdir/$geom_base -summary >& $workdir/$geom_base.log
+shower $workdir/$input_base.show.tmp -geometry=$geom -samples=1 -keep=electrons -root=$workdir/$output_base -summary >& $workdir/$output_base.log
 
 # clean up
 if [ -e $PWD/fort.8 ]; then
@@ -115,11 +115,11 @@ fi
 if [ -e $output ]; then
     rm $output
 fi
-$SHOWERSIM/show2ele.sh $workdir/$geom_base.show $output.tmp
+$SHOWERSIM/show2ele.sh $workdir/$output_base.show $output.tmp
 
 # clean up
-if [ -e $workdir/$geom_base.show ]; then
-    rm $workdir/$geom_base.show
+if [ -e $workdir/$output_base.show ]; then
+    rm $workdir/$output_base.show
 fi
 
 # add temporal profile back into the output file
