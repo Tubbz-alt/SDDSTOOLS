@@ -57,7 +57,7 @@ def makepar(inputf,outputf,verbose):
 
 	# Modify command to include occurrence data.
 	if occ>0:
-		occstr="-col=ElementOccurence,double "
+		occstr="-col=ElementOccurence,long "
 	else:
 		occstr=""
 
