@@ -5,39 +5,66 @@ import shlex
 from subprocess import call
 
 def makepar(inputf,outputf,verbose):
+	# Specify delimiters for input, intermediate files.
 	csv.register_dialect('par',delimiter=',',skipinitialspace=True)
 	csv.register_dialect('parout',delimiter=' ',skipinitialspace=True)
 	
-	f=open(inputf)
+	# Open for reading with unidentified EOL character
+	f=open(inputf,'rU')
 	rdr=csv.reader(f,dialect='par')
+
+	# Extract header
 	header=list(rdr.next())
-	varfmt=list(rdr.next())
-	print header
 	rdrlist=list(rdr)
-	print "rdrlist:"
-	print rdrlist
-	print len(header)-1
 	
 	par=open(outputf + ".tmp",'w')
 	wrtr=csv.writer(par,dialect='parout')
 
-	# print len(header)
-	for i in range(2,len(header)-1):
-		for j in rdrlist:
-			for k in range(0,len(j)):
-				j[k]=j[k].strip()
+	# Find the index for "Occurence" if it exists
+	try:
+		occ=header.index("Occurence")
+	except ValueError:
+		occ=0
+	
+	# Inform if there is occurence data.
+	if verbose:
+		if occ==0:
+			print "No occurence data."
+		else:
+			print "Occurence at index", occ
+
+	print header
+	for j in rdrlist:
+		for i in range(1,len(header)):
+			# Prevents treating occurence as a parameter.
+			if i==occ:
+				continue
+
+			# If occurence exists, use it.
+			if occ>0:
+				row=[j[0].strip(), j[occ], header[i].strip(), j[i].strip()]
+			else:
+				row=[j[0].strip(), header[i].strip(), j[i].strip()]
+
 			if verbose:
-				print j
-			wrtr.writerow(j)
+				print row
+
+			# Write to file to be parsed by plaindata2sdds
+			wrtr.writerow(row)
 	
 	f.close()
 	par.close()
 
-	varstr=""
-	for i in range(0,len(header)):
-		varstr=varstr + " -col=" + header[i].strip() + "," + varfmt[i].strip()
-	command="plaindata2sdds " + outputf + ".tmp " + outputf + " -col=ElementName,string -col=ElementOccurrence,double -col=ElementParameter,string -col=ParameterValue,double -noRowCount -outputMode=binary \"-separator= \""
+	# Modify command to include occurrence data.
+	if occ>0:
+		occstr="-col=ElementOccurence,long "
+	else:
+		occstr=""
+
+	# Change intermediate file to .par file
+	command="plaindata2sdds " + outputf + ".tmp " + outputf + " -col=ElementName,string " + occstr +  "-col=ElementParameter,string -col=ParameterValueString,string -noRowCount -outputMode=binary \"-separator= \""
 	if verbose:
+		print "Command is:"
 		print command
 	call(shlex.split(command))
 
