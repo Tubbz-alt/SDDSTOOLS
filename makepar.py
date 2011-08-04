@@ -62,7 +62,7 @@ def makepar(inputf,outputf,verbose):
 		occstr=""
 
 	# Change intermediate file to .par file
-	command="plaindata2sdds " + outputf + ".tmp " + outputf + " -col=ElementName,string " + occstr +  "-col=ElementParameter,string -col=ParameterValue,double -noRowCount -outputMode=binary \"-separator= \""
+	command="plaindata2sdds " + outputf + ".tmp " + outputf + " -col=ElementName,string " + occstr +  "-col=ElementParameter,string -col=ParameterValueString,string -noRowCount -outputMode=binary \"-separator= \""
 	if verbose:
 		print "Command is:"
 		print command
