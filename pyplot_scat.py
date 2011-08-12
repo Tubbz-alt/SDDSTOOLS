@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import os
 import argparse
 import shlex
 from subprocess import *
@@ -65,12 +66,7 @@ import sys
 
 ver='1.0'
 
-def plotscat(sddsIn,limits):
-	# print sddsIn
-	# com="sddsquery -pipe=input"
-	# args=shlex.split(com)
-	# sqSub = Popen(args,stdin=sddsIn,stdout=sddsOut)
-
+def plotscat(sddsIn,xCoord,yCoord,limits):
 	args=(shlex.split("sddsprocess -pipe=input,output -noWarnings") + 
 			["-convertUnits=column,x,mm,m,1.e3"] +
 			["-convertUnits=column,xp,mrad,,1.e3"] +
@@ -81,35 +77,90 @@ def plotscat(sddsIn,limits):
 			["-define=column,d,p pCentral - pCentral / 100 *,units=%"])
 	sprocSub = Popen(args,stdin=sddsIn,stdout=PIPE)
 
-	if limits!=none:
-		filterStr=''
+	inPipe=sprocSub.stdout
+
+	if limits!=None:
+		filterStr='-filter=column'
+
 		for i in limits:
-			filterStr=filterStr+','i[0]+','+i[1]+','+i[2]
+			filterStr=filterStr + ',' + i[0] + ',' + str(i[1]) + ',' + str(i[2])
+
+		if len(limits)>1:
+			filterStr = filterStr + ',&'
 		
-		args=(shlex.split('sddsprocess -pipe=input,output -noWarnings' \
- "-process=x,standardDeviation,xrms" \
- "-process=xp,standardDeviation,xprms" \
- "-process=y,standardDeviation,yrms" \
- "-process=yp,standardDeviation,yprms" \
- "-process=z,standardDeviation,zrms" \
- "-process=d,standardDeviation,drms" \
- "-process=t,standardDeviation,trms" \
- "-process=p,standardDeviation,prms"
+	else:
+		filterStr=''
+		outPipe=inPipe
 
-		
+	args=(shlex.split('sddsprocess -pipe=input,output -noWarnings ' + filterStr) +
+		["-process=x,standardDeviation,xrms"] +
+		["-process=xp,standardDeviation,xprms"] +
+		["-process=y,standardDeviation,yrms"] +
+		["-process=yp,standardDeviation,yprms"] +
+		["-process=z,standardDeviation,zrms"] +
+		["-process=d,standardDeviation,drms"] +
+		["-process=t,standardDeviation,trms"] +
+		["-process=p,standardDeviation,prms"] )
 
+	filtSub=Popen(args,stdin=inPipe,stdout=PIPE)
+	outPipe=filtSub.stdout
 
-	args=(shlex.split("sddsprocess hey.tmp -pipe=input -noWarnings") +
-			["-process=x,standardDeviation,xrms"] +
-			["-process=xp,standardDeviation,xprms"] +
-			["-process=y,standardDeviation,yrms"] +
-			["-process=yp,standardDeviation,yprms"] +
-			["-process=z,standardDeviation,zrms"] +
-			["-process=d,standardDeviation,drms"] +
-			["-process=t,standardDeviation,trms"] +
-			["-process=p,standardDeviation,prms"])
-	sproc2Sub = Popen(args,stdin=sprocSub.stdout)
+	args=(shlex.split("sddsprocess -pipe=input,output -noWarnings") +
+			["-define=column,E,p sqr 1 - sqrt 510.99906e-6 *,units=GeV"] +
+			["-process=E,average,Ebar"] +
+			["-print=param,ELabel,E+$b0+$n=%.3g %s,Ebar,Ebar.units"] +
+			["-print=param,xrmsLabel,+$gs+$r+$bx+$n=%.3g %s,xrms,xrms.units"] +
+			["-print=param,xprmsLabel,+$gs+$r+$bxp+$n=%.3g %s,xprms,yprms.units"] +
+			["-print=param,yrmsLabel,+$gs+$r+$by+$n=%.3g %s,yrms,yrms.units"] +
+			["-print=param,yprmsLabel,+$gs+$r+$byp+$n=%.3g %s,yprms,yprms.units"] +
+			["-print=param,zrmsLabel,+$gs+$r+$bz+$n=%.3g %s,zrms,zrms.units"] +
+			["-print=param,drmsLabel,+$gs+$r+$b+$gd+$r+$n=%.3g %s,drms,drms.units"] +
+			["-print=param,trmsLabel,+$gs+$r+$bt+$n=%.3g %s,trms,trms.units"] +
+			["-print=param,prmsLabel,+$gs+$r+$bp+$n=%.3g %s,prms,prms.units"] +
+			["-print=param,xLabel,x (%s),x.units"] +
+			["-print=param,xpLabel,x' (%s),xp.units"] +
+			["-print=param,yLabel,y (%s),y.units"] +
+			["-print=param,ypLabel,y' (%s),yp.units"] +
+			["-print=param,zLabel,z (%s),z.units"] +
+			["-print=param,dLabel,+$gd+$rp/p (%s),d.units"] +
+			["-print=param,tLabel,t (%s),t.units"] +
+			["-print=param,pLabel,p (%s),p.units"] )
+	sproc3Sub = Popen(args,stdin=outPipe,stdout=PIPE)
 
+	hists=[xCoord, yCoord]
+	fid=open('hey.out','w')
+	histProc=[fid]
+	otherProc=[]
+	for i in hists:
+		histArgs=shlex.split("sddshist hey." + i + "his -pipe=input -data=" + i + " -bin=100")
+		tmpProc=Popen(histArgs,stdin=PIPE)
+		histProc=histProc+ [tmpProc.stdin]
+		otherProc=otherProc + [tmpProc]
+	while sproc3Sub.poll() == None:
+		buf=os.read(sproc3Sub.stdout.fileno(),10000)
+		for proc in histProc:
+			proc.write(buf)
+	fid.close()
+	for proc in otherProc:
+		proc.stdin.close()
+	
+	plotArgs=(shlex.split("sddsplot -groupby=fileindex " +
+			"-split=page -sep=tag " +
+			"-layout=2,2,limit=3 " +
+			"-column=" + xCoord + "," + yCoord + " hey.out " +
+			"-graph=dot,type=3 " +
+			"-tag=1 -sparse=1 -topline=@ELabel " +
+			"-xlabel=@" + xCoord + "Label -ylabel=@" + yCoord + "Label " +
+			"-column=frequency," + yCoord + " hey." + yCoord + "his " +
+			"-graph=yimpulse,type=2 -unsup=x -xlabel=N " +
+			"-tag=2 -ylabel=@" + yCoord + "Label " +
+			"-column=" + xCoord + ",frequency hey." + xCoord + "his " +
+			"-graph=impulse,type=1 -unsup=y -ylabel=N " +
+			"-tag=3 -xlabel=@" + xCoord + "Label"))
+	
+	# print plotArgs
+
+	Popen(plotArgs)
 
 
 class ValidateOtherLimits(argparse.Action):
@@ -124,7 +175,7 @@ class ValidateOtherLimits(argparse.Action):
 		if app!=None:
 			out=app + [values]
 		else:
-			out=values
+			out=[values]
 		setattr(namespace,'limits',out)
 		
 class ValidateLimits(argparse.Action):
@@ -139,9 +190,9 @@ class ValidateLimits(argparse.Action):
 			# print columnName
 			# print [columnName] + values
 			if app!=None:
-				out=[app, [columnName] + values]
+				out=app + [[columnName] + values]
 			else:
-				out=[columnName] + values
+				out=[[columnName] + values]
 			setattr(namespace,self.dest,out)
 			
 
@@ -166,6 +217,4 @@ if __name__ == '__main__':
 
 	arg=parser.parse_args()
 
-	# print arg.limits
-
-	plotscat(arg.input,arg.limits)
+	plotscat(arg.input,arg.x,arg.y,arg.limits)
