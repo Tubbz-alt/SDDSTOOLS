@@ -32,8 +32,8 @@ def makepar(inputf,outputf,verbose):
 			print "No occurence data."
 		else:
 			print "Occurence at index", occ
+		print header
 
-	print header
 	for j in rdrlist:
 		for i in range(1,len(header)):
 			# Prevents treating occurence as a parameter.
