@@ -1,3 +1,4 @@
 #!/bin/sh
 
-export SHOWERSIM=$PWD
+export SDDSTOOLS=$PWD
+export PATH=$PATH:$SDDSTOOLS

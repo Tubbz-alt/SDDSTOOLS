@@ -1,0 +1,64 @@
+\documentclass[11pt]{article}
+% \usepackage{html}
+\usepackage{longtable}
+\usepackage{subfigure}
+\usepackage[dvips]{graphicx}
+\usepackage{hyperref}
+\pagestyle{plain}
+% \voffset=-0.75in
+\newenvironment{req}{\begin{equation} \rm}{\end{equation}}
+% \newcommand{\includeme}[1]{\include{#1}}
+\newcommand{\includeme}[1]{\input{#1}\newpage}
+\setlength{\topmargin}{0.15 in}
+\setlength{\oddsidemargin}{0 in}
+\setlength{\evensidemargin}{0 in} % not applicable anyway
+\setlength{\textwidth}{6.5 in}
+\setlength{\headheight}{-0.5 in} % for 11pt font size
+%\setlength{\footheight}{0 in}
+\setlength{\textheight}{9 in}
+\begin{document}
+
+\title{User's Manual for {\tt SDDSTOOLS}}
+\author{SLAC National Accelerator Laboratory\date{\today}}
+\author{Joel Frederico \and Michael Litos}
+\maketitle
+
+\section{What's New in Version 1.0}
+
+Nothing is new!  Version numbers haven't been used up until now, so this will be 1.0.
+
+\section{Credits}
+
+Contributors include Joel Frederico and Michael Litos.
+
+\section{Introduction}
+
+This is dependent on the SDDS Toolkit from ANL.  It is essentially a collection of scripts to make analysis of SDDS files easier.
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Scripts}
+	\includeme{batchCollimate.py}
+	\includeme{concatlte.py}
+	\includeme{concatlte.py}
+	\includeme{countpages.sh}
+	\includeme{fullsim.py}
+	\includeme{gen_multi_par.py}
+	\includeme{gen_par.sh}
+	\includeme{plot_2dhist.sh}
+	\includeme{plot_cent.sh}
+	\includeme{plot_comp.sh}
+	\includeme{plot_core.sh}
+	\includeme{plot_gauss.sh}
+	\includeme{plot_line.sh}
+	\includeme{plot_scat.sh}
+	\includeme{plot_twiss.sh}
+	\includeme{pyplot_scat.py}
+	\includeme{read_par.sh}
+	\includeme{sdds2ascii.sh}
+	\includeme{splitpipe.py}
+	\includeme{submitPelegant.py}
+
+\end{document}
