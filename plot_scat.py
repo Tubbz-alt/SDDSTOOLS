@@ -6,12 +6,12 @@ from subprocess import call
 import shutil
 from glob import glob
 
-def plotscat(inputfile,xaxis,yaxis,his,verbose):
+def plotscat(inputfile,xaxis,yaxis,his,clip,verbose):
 	data_base, data_ext = os.path.splitext(inputfile)
 
 	lengthvars = ['x','y']
 	anglevars = ['xp','yp']
-	timevars = ['t']
+	timevars = ['t','z']
 	pvars = ['d']
 
 	# Unit conversion/definitions
@@ -30,7 +30,7 @@ def plotscat(inputfile,xaxis,yaxis,his,verbose):
 			convertStr = convertStr + " \"-process=t,average,tbar\" \
 					\"-define=column,z,t tbar - 2.99792458E11 *,units=mm\""
 		elif i in pvars:
-			convertStr = convertStr + " \"-define=column,d,p pCentral - pCentral / 100 *,units=%\ "
+			convertStr = convertStr + " \"-define=column,d,p pCentral - pCentral / 100 *,units=%\""
 		else:
 			convert = False
 
@@ -107,7 +107,7 @@ def plotscat(inputfile,xaxis,yaxis,his,verbose):
 if __name__ == '__main__':
 
 	parser=argparse.ArgumentParser(description=
-			'Parses a file into a .par file for load_parameters.')
+			'Scatter-plots a SDDS file.')
 	parser.add_argument('-V',action='version',version='%(prog)s v0.1')
 	parser.add_argument('-v','--verbose',action='store_true',
 			help='Verbose mode.')
@@ -122,6 +122,8 @@ if __name__ == '__main__':
 			help='y Axis Variable (Must be SDDS column)')
 	parser.add_argument('--nohis', dest='his', action='store_false',
 			help='Don\'t create histograms')
+	parser.add_argument('-c','--clip',action='store_true',
+			help='Clip tails.')
 	arg=parser.parse_args()
 
-	plotscat(arg.inputfile,arg.xaxis,arg.yaxis,arg.his,arg.verbose)
+	plotscat(arg.inputfile,arg.xaxis,arg.yaxis,arg.his,arg.clip,arg.verbose)
