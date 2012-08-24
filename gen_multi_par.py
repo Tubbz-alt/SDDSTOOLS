@@ -3,14 +3,15 @@ import csv
 import argparse
 import shlex
 from subprocess import call
+import tempfile
 
-def makepar(inputf,outputf,verbose):
+def makepar(f,outputf,verbose):
 	# Specify delimiters for input, intermediate files.
 	csv.register_dialect('par',delimiter=',',skipinitialspace=True)
 	csv.register_dialect('parout',delimiter=' ',skipinitialspace=True)
-	
+
 	# Open for reading with unidentified EOL character
-	f=open(inputf,'rU')
+	# f=open(inputf,'rU')
 	rdr=csv.reader(f,dialect='par')
 
 	# Extract header
@@ -52,7 +53,6 @@ def makepar(inputf,outputf,verbose):
 			# Write to file to be parsed by plaindata2sdds
 			wrtr.writerow(row)
 	
-	f.close()
 	par.close()
 
 	# Modify command to include occurrence data.
@@ -81,5 +81,9 @@ if __name__ == '__main__':
 	parser.add_argument('outputfile',
 			help='Output .par file.')
 	arg=parser.parse_args()
+	
+	inputfile=open(arg.inputfile,'rU')
 
-	makepar(arg.inputfile,arg.outputfile,arg.verbose)
+	makepar(inputfile,arg.outputfile,arg.verbose)
+
+	inputfile.close()
