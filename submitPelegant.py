@@ -18,8 +18,11 @@ def submitPelegant(elefile,cores,email,log,verbose):
 		logstr=''
 		print("No logfile requested, sending to email.  (Notification mandatory.)")
 
-	if email.requested and verbose:
-		print "Email requested."
+	if verbose:
+		if email.requested:
+			print "Email requested."
+		else:
+			print "Email not requested."
 
 	options=''
 	if logstr=='' or email.requested:
@@ -41,7 +44,7 @@ def submitPelegant(elefile,cores,email,log,verbose):
 	maincommand="bsub -a mympi -q beamphysics" + logstr + " -n " + str(cores) + options + " Pelegant " + elefile
 
 	# Diagnostic
-	# print maincommand
+	print maincommand
 
 	if not (os.path.isfile(elefile)):
 		print("File does not exist: " + elefile)
@@ -61,6 +64,7 @@ if __name__ == '__main__':
 		will force an email to be sent as well.'''))
 	parser.add_argument('-V',action='version',version='%(prog)s v0.1')
 	parser.add_argument('-v','--verbose', action='store_true', help='Verbose mode.')
+	parser.add_argument('-r','--remote',help='Run remote? (Default=run.log)')
 	parser.add_argument('-l','--log',nargs='?',const='run.log',help='Log file output. (Default=run.log)')
 	parser.add_argument('deck',action='store',nargs='?',default='facet.ele',
 			help='Elegant input deck. (Default=facet.ele)')
