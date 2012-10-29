@@ -7,10 +7,9 @@
 #
 # Format of plain data file:
 #
-# name    parameter  value
+# name parameter value mode
 # 
-# string  string     double
-#
+# NOTE: 'value' column can contain double or string.
 #---------------------------------------------------
 
 # usage
@@ -39,5 +38,5 @@ fi
 # generate plain text file from parameter file
 sdds2plaindata $input $output \
 -col=ElementName -col=ElementParameter \
--col=ParameterValue \
+-col=ParameterValueString -col=ParameterMode \
 "-separator= " -noRowCount
