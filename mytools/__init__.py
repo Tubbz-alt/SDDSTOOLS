@@ -1,7 +1,6 @@
 from hist2d import hist2d
 from showfig import showfig
 from addlabel import addlabel
-from fitbunch import fitbunch
 
 class Error(Exception):
 	"""Base class for exceptions in this module."""
