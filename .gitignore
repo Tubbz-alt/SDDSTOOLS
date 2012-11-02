@@ -3,4 +3,10 @@
 *.pyc
 *.swm
 *.swn
+*.par
+*.so
+*.c
+*.tar.gz
+*.sdds
+*.tmp
 *~
