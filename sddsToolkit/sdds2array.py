@@ -1,7 +1,12 @@
 import numpy as np
 
 def sdds2array(instance,var):
-	'''Extracts imported SDDS data to a numpy vector.'''
+	'''Extracts imported SDDS data to a numpy vector.
+	
+	Arguments:
+	instance -- pass in the SDDS variable
+	var      -- a string representing the column data to extract
+	'''
 
 	if var == 'z':
 		ind=instance.columnName.index('t')
