@@ -5,8 +5,13 @@ import sys, time
 from collections import deque
 import numpy as np
 
-def loadpage(filename,pagenum):
-	'''Loads a single page into an initialized SDDS class.'''
+def loadpage(filename,pagenum=1):
+	'''Loads a single page and returns an SDDS class.
+	
+	Arguments:
+	filename -- the file to load
+	pagenum  -- the page(s) to load: int, list, or ndarray format
+	'''
 	sddsobj=sdds.SDDS(0)
 
 	# Set up so that multiple pages can be loaded.
