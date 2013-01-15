@@ -4,6 +4,7 @@ import sdds
 import sys, time
 from collections import deque
 import numpy as np
+import os
 
 def loadpage(filename,pagenum=1):
 	'''Loads a single page and returns an SDDS class.
@@ -14,6 +15,10 @@ def loadpage(filename,pagenum=1):
 	'''
 	sddsobj=sdds.SDDS(0)
 
+	# Test for page existence
+	if not ( os.path.exists(filename) ):
+		raise IOError('File \'{}\' not found!'.format(filename))
+
 	# Set up so that multiple pages can be loaded.
 	if type(pagenum) == int:
 		# Turn into a list.
@@ -23,11 +28,8 @@ def loadpage(filename,pagenum=1):
 	elif type(pagenum) == np.ndarray:
 		pagenum=pagenum.astype(int).tolist()
 	else:
-		# Dunno what you gave me.
 		print "Not a list or an int"
 		return
-	# queue = deque(pagenum)
-
 
 	try:
 		#open SDDS file
