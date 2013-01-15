@@ -28,7 +28,7 @@ def loadpage(filename,pagenum=1):
 	elif type(pagenum) == np.ndarray:
 		pagenum=pagenum.astype(int).tolist()
 	else:
-		print "Not a list or an int"
+		print "Not a list or an int."
 		return
 
 	try:
