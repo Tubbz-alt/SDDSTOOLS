@@ -1,6 +1,7 @@
 from hist2d import hist2d
 from showfig import showfig
 from addlabel import addlabel
+import graphics
 
 class Error(Exception):
 	"""Base class for exceptions in this module."""
