@@ -2,7 +2,7 @@
 import sdds.sddsdata as sddsdata
 import sdds
 import sys, time
-from collections import deque
+# from collections import deque
 import numpy as np
 import os
 
@@ -11,7 +11,7 @@ def loadpage(filename,pagenum=1):
 	
 	Arguments:
 	filename -- the file to load
-	pagenum  -- the page(s) to load: int, list, or ndarray format
+	pagenum  -- the page(s) to load: int, list, or ndarray format (default: 1)
 	'''
 	sddsobj=sdds.SDDS(0)
 

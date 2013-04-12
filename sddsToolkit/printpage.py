@@ -1,6 +1,5 @@
 from sdds import sddsdata
 
-
 def printpage(sddsobj):
 	numberOfColumns = len(sddsobj.columnName)
 	a=[[] for i in range(numberOfColumns) ]

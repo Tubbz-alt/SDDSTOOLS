@@ -11,9 +11,10 @@ def fitbunch(x,
 	"""Bin scatter data and fit with a function (default: gaussian).
 
 	Keyword arguments:
-	bins -- the number of bins to use when histogramming (default 100)
+	bins      -- the number of bins to use when histogramming (default 100)
 	plot_bool -- generate a plot of the fit if true (default False)
-	fitfunc -- a lambda function used for fitting.  (default )
+	fitfunc   -- a lambda function used for fitting.  (default )
+	p0        -- initial guess (optional)
 
 	fitfunc:
 		fitfunc=lambda p, x: p[0]*np.exp(-np.square(x-p[2])/(2*np.square(p[1])))
