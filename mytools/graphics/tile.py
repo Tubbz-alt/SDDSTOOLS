@@ -8,11 +8,12 @@ def tile():
 	figs=plt.get_fignums()
 
 	# Keep track of x,y,size for figures
-	x=0
-	y=0
+	x       = 0
+	y       = 0
+	# maxy    = 0
+	toppad  = 21
+
 	size=np.array([0,0])
-	maxy=0
-	toppad = 21
 
 	if ( len(figs) != 0 ):
 		fig=plt.figure(figs[0])
@@ -20,17 +21,24 @@ def tile():
 		screenx = screen.get_monitor_geometry(screen.get_primary_monitor())
 		screenx = screenx[2]
 	
-	for fig in figs:
-		fig = plt.figure(fig)
-		size=np.array(fig.canvas.manager.window.get_size())
-		if ( x+size[0] > screenx ):
-			x=0
-			y=maxy
-			maxy= y+size[1]+toppad
-		else:
-			maxy = max(maxy,y+size[1]+toppad)
+		fig = plt.figure(figs[0])
 		fig.canvas.manager.window.move(x,y)
-		x += size[0] + 1
+		maxy = np.array(fig.canvas.manager.window.get_position())[1]
+		size=np.array(fig.canvas.manager.window.get_size())
+		y = maxy
+		x += size[0]+1
+	
+		for fig in figs[1:]:
+			fig = plt.figure(fig)
+			size=np.array(fig.canvas.manager.window.get_size())
+			if ( x+size[0] > screenx ):
+				x=0
+				y=maxy
+				maxy= y+size[1]+toppad
+			else:
+				maxy = max(maxy,y+size[1]+toppad)
+			fig.canvas.manager.window.move(x,y)
+			x += size[0] + 1
 	
 if __name__ == "__main__":
 	tile()
