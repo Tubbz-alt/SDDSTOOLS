@@ -1,7 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 
-def savefig(elepath,top):
+def savefig(top,elepath="figs"):
 	try:
 		os.remove(elepath)
 	except OSError as e:
