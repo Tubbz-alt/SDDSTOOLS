@@ -1,6 +1,8 @@
+from hist import hist
 from hist2d import hist2d
 from showfig import showfig
 from addlabel import addlabel
+from gaussfit import gaussfit
 import graphics
 
 class Error(Exception):
