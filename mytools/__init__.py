@@ -3,6 +3,9 @@ from hist2d import hist2d
 from showfig import showfig
 from addlabel import addlabel
 from gaussfit import gaussfit
+from gaussfit import _gauss
+from gaussfit import _gaussvar
+from chisquare import chisquare
 import graphics
 
 class Error(Exception):
