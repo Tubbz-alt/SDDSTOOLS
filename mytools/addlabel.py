@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-def addlabel(tl,xl,yl):
+def addlabel(toplabel,xlabel,ylabel):
 	"""Adds labels to a plot."""
 
 	plt.title(tl)
