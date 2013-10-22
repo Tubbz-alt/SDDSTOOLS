@@ -6,6 +6,8 @@ from gaussfit import gaussfit
 from gaussfit import _gauss
 from gaussfit import _gaussvar
 from chisquare import chisquare
+from curve_fit_unscaled import curve_fit_unscaled
+from plot_featured import plot_featured
 import graphics
 
 class Error(Exception):
