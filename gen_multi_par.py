@@ -3,7 +3,6 @@ import csv
 import argparse
 import shlex
 from subprocess import call
-import tempfile
 
 def makepar(f,outputf,verbose):
 	# Specify delimiters for input, intermediate files.

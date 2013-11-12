@@ -1,7 +1,14 @@
+from hist import hist
 from hist2d import hist2d
 from showfig import showfig
 from addlabel import addlabel
-# import graphics
+from gaussfit import gaussfit
+from gaussfit import _gauss
+from gaussfit import _gaussvar
+from chisquare import chisquare
+from curve_fit_unscaled import curve_fit_unscaled
+from plot_featured import plot_featured
+import graphics
 
 class Error(Exception):
 	"""Base class for exceptions in this module."""
