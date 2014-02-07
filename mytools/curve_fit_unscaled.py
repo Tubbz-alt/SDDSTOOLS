@@ -19,6 +19,8 @@ def curve_fit_unscaled(*args,**kwargs):
 	# Try to use sigma to unscale pcov
 	try:
 		sigma = kwargs['sigma']
+		if sigma==None:
+			sigma = _np.ones(len(y))
 		# Get reduced chi-square
 		y_expect = func(x,*popt)
 		chisq_red = _chisquare(y,y_expect,sigma,ddof,verbose=verbose)

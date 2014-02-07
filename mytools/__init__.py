@@ -9,6 +9,9 @@ from chisquare import chisquare
 from curve_fit_unscaled import curve_fit_unscaled
 from plot_featured import plot_featured
 import graphics
+from figure import figure
+from linspacestep import linspacestep
+from findpinch import findpinch
 
 class Error(Exception):
 	"""Base class for exceptions in this module."""

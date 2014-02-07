@@ -5,10 +5,11 @@ from chisquare import chisquare as _chisquare
 from curve_fit_unscaled import curve_fit_unscaled as _curve_fit_unscaled
 
 def _gauss(x,amp,mu,sigma,bg=0):
-	return amp*_np.exp(-(x-mu)**2/(2*sigma**2))+bg
+	# return _np.abs(amp)*_np.exp(-(x-mu)**2/(2*sigma**2))+bg
+	return _np.abs(amp)*_np.exp(-(x-mu)**2/(2*sigma**2))
 
 def _gaussvar(x,amp,mu,variance,bg=0):
-	return amp*_np.exp(-(x-mu)**2/(2*variance))+bg
+	return _np.abs(amp)*_np.exp(-(x-mu)**2/(2*variance))+bg
 
 def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_bool=False):
 	x       = x.flatten()
@@ -33,9 +34,19 @@ def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_boo
 			p0 = _np.array((amp,mu,rms**2,bg))
 		else:
 			p0 = _np.array((amp,mu,rms,bg))
+	else:
+		if variance_bool:
+			rms = _np.sqrt(p0[2])
+		else:
+			rms = p0[2]
+
 
 	# Verbose options
 	if verbose:
+		if variance_bool:
+			print 'Using function gaussvar'
+		else:
+			print 'Using function gauss'
 		print 'Initial guess is: {}'.format(p0)
 		print 'RMS is: {}'.format(rms)
 
@@ -56,6 +67,8 @@ def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_boo
 	#                 print 'Without error'
 	#                 print 'WARNING: COVARIANCE MATRIX SCALED'
 	#         popt,pcov = _spopt.curve_fit(func,x,y,p0=p0)
+
+	popt[2] = _np.abs(popt[2])
 
 	if verbose:
 		print 'Fit results are: {}'.format(popt)
