@@ -12,6 +12,7 @@ import graphics
 from figure import figure
 from linspacestep import linspacestep
 from findpinch import findpinch
+from derefdataset import derefdataset
 
 class Error(Exception):
 	"""Base class for exceptions in this module."""
