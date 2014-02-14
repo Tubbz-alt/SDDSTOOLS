@@ -3,15 +3,23 @@ import scipy.optimize as _spopt
 import matplotlib.pyplot as _plt
 from chisquare import chisquare as _chisquare
 from curve_fit_unscaled import curve_fit_unscaled as _curve_fit_unscaled
+from figure import figure as _figure
 
 def _gauss(x,amp,mu,sigma,bg=0):
-	# return _np.abs(amp)*_np.exp(-(x-mu)**2/(2*sigma**2))+bg
-	return _np.abs(amp)*_np.exp(-(x-mu)**2/(2*sigma**2))
+	return _np.abs(amp)*_np.exp(-(x-mu)**2/(2*sigma**2))+bg
+	# return _np.abs(amp)*_np.exp(-(x-mu)**2/(2*sigma**2))
+
+def _gauss_nobg(x,amp,mu,sigma):
+	return _gauss(x,amp,mu,sigma)
 
 def _gaussvar(x,amp,mu,variance,bg=0):
 	return _np.abs(amp)*_np.exp(-(x-mu)**2/(2*variance))+bg
+	# return _np.abs(amp)*_np.exp(-(x-mu)**2/(2*variance))
 
-def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_bool=False):
+def _gaussvar_nobg(x,amp,mu,variance):
+	return _gauss(x,amp,mu,variance)
+
+def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_bool=False, background_bool=False):
 	x       = x.flatten()
 	y       = y.flatten()
 
@@ -20,9 +28,15 @@ def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_boo
 	# Determine whether to use the variance or std dev form
 	# in the gaussian equation
 	if variance_bool:
-		func = _gaussvar
+		if background_bool:
+			func = _gaussvar
+		else:
+			func = _gaussvar_nobg
 	else:
-		func = _gauss
+		if background_bool:
+			func = _gauss
+		else:
+			func = _gauss_nobg
 
 	# Determine initial guesses if none are input
 	if ( p0 == None):
@@ -31,9 +45,11 @@ def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_boo
 		rms = _np.sqrt(sum(x**2 * y)/sum(y))
 		bg  = 0
 		if variance_bool:
-			p0 = _np.array((amp,mu,rms**2,bg))
+			p0 = _np.array((amp,mu,rms**2))
 		else:
-			p0 = _np.array((amp,mu,rms,bg))
+			p0 = _np.array((amp,mu,rms))
+		if background_bool:
+			p0 = np.append(p0,bg)
 	else:
 		if variance_bool:
 			rms = _np.sqrt(p0[2])
@@ -77,13 +93,23 @@ def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_boo
 		xmin = min(x)
 		xmax = max(x)
 		x_fit = _np.linspace(xmin,xmax,1000)
-		y_fit = func(x_fit,popt[0],popt[1],popt[2],popt[3])
+		if background_bool:
+			y_fit = func(x_fit,popt[0],popt[1],popt[2],popt[3])
+		else:
+			y_fit = func(x_fit,popt[0],popt[1],popt[2])
+		numfigs=_np.size(_plt.get_fignums())
+		if numfigs > 0:
+			fig = _plt.gcf()
+		_figure('MYTOOLS: Gauss Fit Routine')
 		if use_error:
 			sigma_y = sigma_y.flatten()
 			_plt.errorbar(x,y,yerr=sigma_y,fmt='o-')
 			_plt.plot(x_fit,y_fit)
 		else:
 			_plt.plot(x,y,'o-',x_fit,y_fit)
+		if numfigs > 0:
+			_plt.figure(fig.number)
+		
 
 	if use_error:
 		return popt,pcov,chisq_red
