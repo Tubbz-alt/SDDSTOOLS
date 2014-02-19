@@ -6,6 +6,7 @@ from curve_fit_unscaled import curve_fit_unscaled as _curve_fit_unscaled
 from figure import figure as _figure
 
 def _gauss(x,amp,mu,sigma,bg=0):
+	print 'Sigma is {}.'.format(sigma)
 	return _np.abs(amp)*_np.exp(-(x-mu)**2/(2*sigma**2))+bg
 	# return _np.abs(amp)*_np.exp(-(x-mu)**2/(2*sigma**2))
 
@@ -17,7 +18,7 @@ def _gaussvar(x,amp,mu,variance,bg=0):
 	# return _np.abs(amp)*_np.exp(-(x-mu)**2/(2*variance))
 
 def _gaussvar_nobg(x,amp,mu,variance):
-	return _gauss(x,amp,mu,variance)
+	return _gaussvar(x,amp,mu,variance)
 
 def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_bool=False, background_bool=False):
 	x       = x.flatten()
@@ -27,6 +28,7 @@ def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_boo
 
 	# Determine whether to use the variance or std dev form
 	# in the gaussian equation
+	# print 'variance_bool is {}'.format(variance_bool)
 	if variance_bool:
 		if background_bool:
 			func = _gaussvar
@@ -49,13 +51,14 @@ def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_boo
 		else:
 			p0 = _np.array((amp,mu,rms))
 		if background_bool:
-			p0 = np.append(p0,bg)
+			p0 = _np.append(p0,bg)
 	else:
 		if variance_bool:
 			rms = _np.sqrt(p0[2])
 		else:
 			rms = p0[2]
 
+	print p0
 
 	# Verbose options
 	if verbose:
