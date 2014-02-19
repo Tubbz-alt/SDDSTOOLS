@@ -14,6 +14,7 @@ from linspacestep import linspacestep
 from findpinch import findpinch
 from derefdataset import derefdataset
 from fitimageslice import fitimageslice
+import E200
 
 class Error(Exception):
 	"""Base class for exceptions in this module."""
