@@ -13,6 +13,7 @@ from figure import figure
 from linspacestep import linspacestep
 from findpinch import findpinch
 from derefdataset import derefdataset
+from fitimageslice import fitimageslice
 
 class Error(Exception):
 	"""Base class for exceptions in this module."""
