@@ -2,6 +2,7 @@
 import numpy as _np
 import matplotlib.pyplot as _plt
 from addlabel import addlabel as _addlabel
+from figure import _figure
 
 def plot_featured(*args,**kwargs):
 	"""Wrapper for matplotlib.pyplot.plot()/errorbar().
@@ -18,6 +19,12 @@ def plot_featured(*args,**kwargs):
 	legend   = kwargs.pop('legend',None)
 	error    = kwargs.pop('error',None)
 	save     = kwargs.pop('save',False)
+	figlabel = kwargs.pop('figlabel',None)
+
+	if not (figlabel == None):
+		fig=_figure(figlabel)
+	else:
+		fig=_plt.figure()
 
 	# Pass everything else to plot
 	if ( error == None ):
@@ -29,3 +36,5 @@ def plot_featured(*args,**kwargs):
 	_addlabel(toplabel,xlabel,ylabel)
 	if ( legend != None ):
 		_plt.legend(legend)
+
+	return fig
