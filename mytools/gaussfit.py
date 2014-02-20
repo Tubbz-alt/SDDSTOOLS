@@ -58,7 +58,7 @@ def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_boo
 		else:
 			rms = p0[2]
 
-	print p0
+	# print p0
 
 	# Verbose options
 	if verbose:
