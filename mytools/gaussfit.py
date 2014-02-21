@@ -4,9 +4,10 @@ import matplotlib.pyplot as _plt
 from chisquare import chisquare as _chisquare
 from curve_fit_unscaled import curve_fit_unscaled as _curve_fit_unscaled
 from figure import figure as _figure
+import collections as _col
 
 def _gauss(x,amp,mu,sigma,bg=0):
-	print 'Sigma is {}.'.format(sigma)
+	# print 'Sigma is {}.'.format(sigma)
 	return _np.abs(amp)*_np.exp(-(x-mu)**2/(2*sigma**2))+bg
 	# return _np.abs(amp)*_np.exp(-(x-mu)**2/(2*sigma**2))
 
@@ -115,6 +116,8 @@ def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_boo
 		
 
 	if use_error:
-		return popt,pcov,chisq_red
+		gaussout=_col.namedtuple('gaussfit',['popt','pcov','chisq_red'])
+		return gaussout(popt,pcov,chisq_red)
 	else:
-		return popt,pcov
+		gaussout=_col.namedtuple('gaussfit',['popt','pcov'])
+		return gaussout(popt,pcov)
