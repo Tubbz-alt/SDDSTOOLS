@@ -102,8 +102,8 @@ def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_boo
 		else:
 			y_fit = func(x_fit,popt[0],popt[1],popt[2])
 		numfigs=_np.size(_plt.get_fignums())
-		if numfigs > 0:
-			fig = _plt.gcf()
+		# if numfigs > 0:
+		#         fig = _plt.gcf()
 		_figure('MYTOOLS: Gauss Fit Routine')
 		if use_error:
 			sigma_y = sigma_y.flatten()
@@ -111,8 +111,8 @@ def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_boo
 			_plt.plot(x_fit,y_fit)
 		else:
 			_plt.plot(x,y,'o-',x_fit,y_fit)
-		if numfigs > 0:
-			_plt.figure(fig.number)
+		# if numfigs > 0:
+		#         _plt.figure(fig.number)
 		
 
 	if use_error:

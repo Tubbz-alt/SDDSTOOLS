@@ -3,9 +3,8 @@ import numpy as _np
 import pdb as _pdb
 import mytools as _mt
 import matplotlib.pyplot as _plt
-import ButterflyEmittancePython as bt
 
-def fitimageslice(img,res_x,res_y,xslice,yslice,avg_e_func=None,h5file=None):
+def fitimageslice(img,res_x,res_y,xslice,yslice,avg_e_func=None,h5file=None,plot=False):
 	# ======================================
 	# Extract start and end values
 	# (NOT necessarily indices!)
@@ -21,9 +20,6 @@ def fitimageslice(img,res_x,res_y,xslice,yslice,avg_e_func=None,h5file=None):
 	# ======================================
 	y_low = _np.round(y_start-0.5) + 0.5
 	y_high = _np.round(y_end-0.5) + 0.5
-	# print '======================'
-	# print y_start,y_end,y_end-y_start
-	# print y_low,y_high
 
 	# ======================================
 	# Take a strip between edges
@@ -38,21 +34,24 @@ def fitimageslice(img,res_x,res_y,xslice,yslice,avg_e_func=None,h5file=None):
 	histdata = _np.sum(strip,0)
 	xbins = len(histdata)
 	x = _np.linspace(1,xbins,xbins)*res_x
-	# plt.plot(x,histdata)
 	
 	# ======================================
 	# Fit with a Gaussian to find spot size
 	# ======================================
 	# plotbool=True
-	plotbool = False
+	# plotbool = False
 	# varbool  = False
 	varbool  = True
 	gaussout=_gaussfit(x,histdata,sigma_y=_np.ones(xbins),
-			plot=plotbool,
+			plot=plot,
 			variance_bool=varbool,
 			verbose=False,
 			background_bool=True,
-			p0=[16000,0.003,1e-6,0])
+			p0=[16000,0.003,1e-6,0]
+			)
+
+	# if plot:
+	#         _plt.show()
 
 	if avg_e_func != None:
 		# ======================================

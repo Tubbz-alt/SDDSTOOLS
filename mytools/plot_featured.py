@@ -20,11 +20,15 @@ def plot_featured(*args,**kwargs):
 	error    = kwargs.pop('error',None)
 	save     = kwargs.pop('save',False)
 	figlabel = kwargs.pop('figlabel',None)
+	fig      = kwargs.pop('fig',None)
 
 	if not (figlabel == None):
 		fig=_figure(figlabel)
-	else:
-		fig=_plt.figure()
+	elif fig==None:
+		try:
+			fig=_plt.gcf()
+		except:
+			fig=_plt.fig()
 
 	# Pass everything else to plot
 	if ( error == None ):

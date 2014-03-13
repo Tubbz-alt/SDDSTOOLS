@@ -20,7 +20,8 @@ def findpinch(img,xbounds=None,ybounds=None,step=1,verbose=False):
 	img=img[yrange,xrange]
 	if verbose:
 		fig=_mt.figure('To process')
-		_plt.imshow(img)
+		ax=fig.add_subplot(111)
+		ax.imshow(img)
 		_plt.show()
 	
 	# ======================================
@@ -45,10 +46,6 @@ def findpinch(img,xbounds=None,ybounds=None,step=1,verbose=False):
 		histdata = _np.sum(strip,0)
 		xbins = len(histdata)
 		x = _np.linspace(1,xbins,xbins)
-		if verbose:
-			_plt.plot(x,histdata,'.-')
-			_plt.show()
-			_pdb.set_trace()
 		
 		# Fit with a Gaussian to find spot size
 		# plotbool=True
@@ -74,7 +71,10 @@ def findpinch(img,xbounds=None,ybounds=None,step=1,verbose=False):
 	out=_np.polyfit(yvar,variance,2)
 
 	if verbose:
-		_plt.plot(yvar,variance,yvar,_np.polyval(out,yvar))
+		# pass
+		_plt.figure()
+		pvar = ystart + yvar*step
+		_plt.plot(pvar,variance,'.-',pvar,_np.polyval(out,yvar),'-')
 		_plt.show()
 
 	# ======================================
@@ -84,3 +84,5 @@ def findpinch(img,xbounds=None,ybounds=None,step=1,verbose=False):
 	pxmin = fitmin*step+ystart
 
 	print 'Minimum at {} step, {}px'.format(fitmin,pxmin)
+
+	return pxmin

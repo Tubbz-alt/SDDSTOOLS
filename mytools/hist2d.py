@@ -14,7 +14,7 @@ def hist2d(x, y, bins=10, labels=None, aspect="auto", plot=True, fig=None, range
 			fig=plt.gcf()
 		ax=fig.gca()
 		ax.clear()
-		img=ax.imshow(h.transpose(),extent=extent,interpolation="none",aspect=aspect)
+		img=ax.imshow(h.transpose(),extent=extent,interpolation='none',aspect=aspect)
 		plt.colorbar(img)
 		if ( labels != None ):
 			addlabel(labels[0],labels[1],labels[2])
