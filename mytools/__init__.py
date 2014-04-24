@@ -8,11 +8,11 @@ from gaussfit import _gaussvar
 from chisquare import chisquare
 from curve_fit_unscaled import curve_fit_unscaled
 from plot_featured import plot_featured
-import graphics
+# import graphics
 from figure import figure
 from linspacestep import linspacestep
 from findpinch import findpinch
-from derefdataset import derefdataset
+from derefdataset import *
 from fitimageslice import fitimageslice
 import E200
 
