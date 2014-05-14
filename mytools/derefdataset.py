@@ -13,6 +13,14 @@ def derefdataset(dataset,f):
 
 	return out
 
+def derefstr(dataset):
+	intarr = _np.array(dataset)
+	strarr = intarr.view('S2')
+	strarr = strarr.flatten()
+	strarr = ''.join(strarr)
+
+	return strarr
+
 def derefimgs(dataset,datasetbg,f):
 	# Get the dataset shape, initialize output
 	out = _np.empty([dataset.shape[0],734,1292])
