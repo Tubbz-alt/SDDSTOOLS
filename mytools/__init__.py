@@ -15,6 +15,7 @@ from findpinch import findpinch
 from derefdataset import *
 from fitimageslice import fitimageslice
 import E200
+import qt
 
 class Error(Exception):
 	"""Base class for exceptions in this module."""
