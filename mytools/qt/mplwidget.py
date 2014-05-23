@@ -2,6 +2,7 @@ from PyQt4 import QtGui,QtCore
 import matplotlib as _mpl
 # import matplotlib.figure as plt
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as _FigureCanvas
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as _NavigationToolbar
 import numpy as _np
 
 try:
@@ -18,16 +19,90 @@ except AttributeError:
     def _translate(context, text, disambig):
 	return QtGui.QApplication.translate(context, text, disambig)
 
-class Mpl_Image(_FigureCanvas):
-	# Signal for when the rectangle is changed
-	rectChanged = QtCore.pyqtSignal(_mpl.patches.Rectangle)
+class Slider_and_Text(QtGui.QWidget):
+	valueChanged = QtCore.pyqtSignal(int)
 
-	def __init__(self, parent=None, rectbool = True,image=None):
+	def __init__(self,parent=None):
+		QtGui.QWidget.__init__(self)
+		self.hLayout = QtGui.QHBoxLayout()
+		self.slider = QtGui.QSlider()
+
+		self.v = QtGui.QIntValidator()
+		self.box = QtGui.QLineEdit()
+		self.box.setValidator(self.v)
+
+		self.hLayout.addWidget(self.slider)
+		self.hLayout.addWidget(self.box)
+		self.setLayout(self.hLayout)
+		
+		self.slider.valueChanged.connect(self._sliderChanged)
+		self.box.textChanged.connect(self._textChanged)
+
+	def setMaximum(self,val):
+		self.slider.setMaximum(val)
+		# self.v = QtGui.QIntValidator(self.slider.minimum(),self.slider.maximum(),parent=None)
+		self.v = QtGui.QIntValidator()
+		self.v.setRange(self.slider.minimum(),self.slider.maximum())
+		self.box.setValidator(self.v)
+
+	def _sliderChanged(self,val):
+		self.box.setText(str(val))
+		self.valueChanged.emit(val)
+
+	def _textChanged(self,val):
+		self.slider.setValue(int(val))
+
+	def setOrientation(self,*args,**kwargs):
+		self.slider.setOrientation(*args,**kwargs)
+
+	def setValue(self,val):
+		self.slider.setValue(val)
+		self.box.setText(str(val))
+
+class Mpl_Plot(_FigureCanvas):
+	def __init__(self,parent=None):
 		# Initialize things
 		self.fig=_mpl.figure.Figure()
 		_FigureCanvas.__init__(self,self.fig)
 		_FigureCanvas.setSizePolicy(self,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
 		_FigureCanvas.updateGeometry(self)
+
+		# Create axes
+		self.ax=self.fig.add_subplot(111)
+
+	def _get_img(self):
+		return self._image
+	def _set_img(self,image):
+		self._image = image
+		if image != None:
+			self._imgplot = self.ax.imshow(image,interpolation='none')
+			imagemax = _np.max(_np.max(image))
+			print 'Image max is {}.'.format(imagemax)
+			self.fig.colorbar(self._imgplot)
+	image = property(_get_img,_set_img)
+
+class Mpl_Image(QtGui.QWidget):
+	# Signal for when the rectangle is changed
+	rectChanged = QtCore.pyqtSignal(_mpl.patches.Rectangle)
+
+	def __init__(self, parent=None, rectbool = True, toolbarbool=False, image=None):
+		# Initialize things
+		QtGui.QWidget.__init__(self)
+		# Add a vertical layout
+		self.vLayout = QtGui.QVBoxLayout()
+		# Add a figure
+		self.fig=_mpl.figure.Figure()
+		# Add a canvas containing the fig
+		self.canvas = _FigureCanvas(self.fig)
+		_FigureCanvas.setSizePolicy(self.canvas,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
+		_FigureCanvas.updateGeometry(self.canvas)
+
+		# Setup the layout
+		if toolbarbool:
+			self.toolbar = _NavigationToolbar(self.canvas,self)
+			self.vLayout.addWidget(self.toolbar)
+		self.vLayout.addWidget(self.canvas)
+		self.setLayout(self.vLayout)
 
 		# Create axes
 		self.ax=self.fig.add_subplot(111)
@@ -49,7 +124,6 @@ class Mpl_Image(_FigureCanvas):
 
 	def _get_img(self):
 		return self._image
-
 	def _set_img(self,image):
 		self._image = image
 		if image != None:
@@ -57,7 +131,6 @@ class Mpl_Image(_FigureCanvas):
 			imagemax = _np.max(_np.max(image))
 			print 'Image max is {}.'.format(imagemax)
 			self.fig.colorbar(self._imgplot)
-
 	image = property(_get_img,_set_img)
 
 	def set_clim(self,clim_min,clim_max):
@@ -81,6 +154,7 @@ class Mpl_Image(_FigureCanvas):
 		self.ax.figure.canvas.draw()
 
 		self.rectChanged.emit(self.rect)
+		print self.rect
 
 	def zoom_rect(self,border=0):
 		# Get x coordinates
@@ -115,13 +189,14 @@ class Mpl_Image_Plus_Slider(QtGui.QWidget):
 		# Add an Mpl_Image widget to vLayout,
 		# save it to self._img
 		# Pass arguments through to Mpl_Image.
-		self._img=Mpl_Image(parent=parent,**kwargs)
+		self._img=Mpl_Image(parent=parent,toolbarbool=True,**kwargs)
 		self._img.setObjectName(_fromUtf8("_img"))
 		self.vLayout.addWidget(self._img)
 
 		# Add a slider to vLayout,
 		# save it to self.max_slider
-		self.max_slider = QtGui.QSlider(self)
+		# self.max_slider = QtGui.QSlider(self)
+		self.max_slider = Slider_and_Text(self)
 		self.max_slider.setObjectName(_fromUtf8("max_slider"))
 		self.max_slider.setOrientation(QtCore.Qt.Horizontal)
 		self.vLayout.addWidget(self.max_slider)
