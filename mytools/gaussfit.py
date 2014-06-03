@@ -6,6 +6,31 @@ from curve_fit_unscaled import curve_fit_unscaled as _curve_fit_unscaled
 from figure import figure as _figure
 import collections as _col
 
+class GaussResults(object):
+	def __init__(self,x,y,sigma_y,func,popt,pcov=None,chisq_red=None):
+		# Populate default info
+		self.popt=popt
+		self.pcov=pcov
+		self.chisq_red=chisq_red
+		self.x=x
+		self.y=y
+		self.sigma_y=sigma_y
+		self.func=func
+
+	def plot(self,ax):
+		xmin = min(self.x)
+		xmax = max(self.x)
+		x_fit = _np.linspace(xmin,xmax,1000)
+		y_fit = self.func(x_fit,*self.popt)
+		# _figure('MYTOOLS: Gauss Fit Routine')
+		if self.sigma_y!=None:
+			self.sigma_y = self.sigma_y.flatten()
+			ax.errorbar(self.x,self.y,yerr=self.sigma_y,fmt='o-')
+			ax.plot(x_fit,y_fit)
+		else:
+			ax.plot(x,y,'o-',x_fit,y_fit)
+
+
 def _gauss(x,amp,mu,sigma,bg=0):
 	# print 'Sigma is {}.'.format(sigma)
 	return _np.abs(amp)*_np.exp(-(x-mu)**2/(2*sigma**2))+bg
@@ -116,8 +141,12 @@ def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_boo
 		
 
 	if use_error:
-		gaussout=_col.namedtuple('gaussfit',['popt','pcov','chisq_red'])
-		return gaussout(popt,pcov,chisq_red)
+		# gaussout=_col.namedtuple('gaussfit',['popt','pcov','chisq_red'])
+		# return gaussout(popt,pcov,chisq_red)
+		gaussout=GaussResults(x=x,y=y,sigma_y=sigma_y,func=func,popt=popt,pcov=pcov,chisq_red=chisq_red)
+		return gaussout
 	else:
-		gaussout=_col.namedtuple('gaussfit',['popt','pcov'])
-		return gaussout(popt,pcov)
+		# gaussout=_col.namedtuple('gaussfit',['popt','pcov'])
+		# return gaussout(popt,pcov)
+		gaussout=GaussResults(x=x,y=y,sigma_y=sigma_y,func=func,popt=popt,pcov=pcov)
+		return gaussout

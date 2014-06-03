@@ -37,10 +37,17 @@ class Slider_and_Text(QtGui.QWidget):
 		
 		self.slider.valueChanged.connect(self._sliderChanged)
 		self.box.textChanged.connect(self._textChanged)
+		self.setOrientation(QtCore.Qt.Horizontal)
 
 	def setMaximum(self,val):
 		self.slider.setMaximum(val)
 		# self.v = QtGui.QIntValidator(self.slider.minimum(),self.slider.maximum(),parent=None)
+		self.v = QtGui.QIntValidator()
+		self.v.setRange(self.slider.minimum(),self.slider.maximum())
+		self.box.setValidator(self.v)
+
+	def setMinimum(self,val):
+		self.slider.setMinimum(val)
 		self.v = QtGui.QIntValidator()
 		self.v.setRange(self.slider.minimum(),self.slider.maximum())
 		self.box.setValidator(self.v)
@@ -54,6 +61,14 @@ class Slider_and_Text(QtGui.QWidget):
 
 	def setOrientation(self,*args,**kwargs):
 		self.slider.setOrientation(*args,**kwargs)
+
+	def _getValue(self,val):
+		return self.slider.value
+	def _setValue(self,val):
+		self.slider.value = val
+		self.box.text = str(val)
+
+	value = property(_getValue,_setValue)
 
 	def setValue(self,val):
 		self.slider.setValue(val)
@@ -70,16 +85,16 @@ class Mpl_Plot(_FigureCanvas):
 		# Create axes
 		self.ax=self.fig.add_subplot(111)
 
-	def _get_img(self):
-		return self._image
-	def _set_img(self,image):
-		self._image = image
-		if image != None:
-			self._imgplot = self.ax.imshow(image,interpolation='none')
-			imagemax = _np.max(_np.max(image))
-			print 'Image max is {}.'.format(imagemax)
-			self.fig.colorbar(self._imgplot)
-	image = property(_get_img,_set_img)
+	# def _get_img(self):
+	#         return self._image
+	# def _set_img(self,image):
+	#         self._image = image
+	#         if image != None:
+	#                 self._imgplot = self.ax.imshow(image,interpolation='none')
+	#                 imagemax = _np.max(_np.max(image))
+	#                 print 'Image max is {}.'.format(imagemax)
+	#                 self.fig.colorbar(self._imgplot)
+	# image = property(_get_img,_set_img)
 
 class Mpl_Image(QtGui.QWidget):
 	# Signal for when the rectangle is changed
