@@ -188,6 +188,17 @@ class Mpl_Image(QtGui.QWidget):
 		y0 = y0 - border
 		y1 = y1 + border
 
+		# Validate coordinates to prevent unPythonic crash
+		if not ((0 <= x0 and x0 <= self.image.shape[1]) and (0 <= x1 and x1 <= self.image.shape[1])):
+			print 'X issue'
+			x0 = 0
+			x1 = self.image.shape[1]
+		if not ((0 <= y0 and y0 <= self.image.shape[0]) and (0 <= y1 and y1 <= self.image.shape[0])):
+			print 'y issue'
+			y0 = 0
+			y1 = self.image.shape[0]
+
+		print self.rect
 		self.ax.set_xlim(x0,x1)
 		self.ax.set_ylim(y0,y1)
 
