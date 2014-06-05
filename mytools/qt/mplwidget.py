@@ -21,58 +21,119 @@ except AttributeError:
 
 class Slider_and_Text(QtGui.QWidget):
 	valueChanged = QtCore.pyqtSignal(int)
+	sliderReleased = QtCore.pyqtSignal(int)
 
 	def __init__(self,parent=None):
 		QtGui.QWidget.__init__(self)
+		# Enable tracking by default
+		self._tracking=True
 		self.hLayout = QtGui.QHBoxLayout()
 		self.slider = QtGui.QSlider()
+
+		self.leftbutton = QtGui.QPushButton()
+		self.leftbutton.setText("<")
+		sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
+		sizePolicy.setHorizontalStretch(0)
+        	sizePolicy.setVerticalStretch(0)
+		sizePolicy.setHeightForWidth(self.leftbutton.sizePolicy().hasHeightForWidth())
+		self.leftbutton.setSizePolicy(sizePolicy)
+		self.leftbutton.clicked.connect(self._subone)
+
+		self.rightbutton = QtGui.QPushButton()
+		self.rightbutton.setText(">")
+		sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
+		sizePolicy.setHorizontalStretch(0)
+        	sizePolicy.setVerticalStretch(0)
+		sizePolicy.setHeightForWidth(self.rightbutton.sizePolicy().hasHeightForWidth())
+		self.rightbutton.setSizePolicy(sizePolicy)
+		self.rightbutton.clicked.connect(self._addone)
 
 		self.v = QtGui.QIntValidator()
 		self.box = QtGui.QLineEdit()
 		self.box.setValidator(self.v)
+		sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
+		sizePolicy.setHorizontalStretch(0)
+        	sizePolicy.setVerticalStretch(0)
+		sizePolicy.setHeightForWidth(self.box.sizePolicy().hasHeightForWidth())
+		self.box.setSizePolicy(sizePolicy)
 
+		self.hLayout.addWidget(self.leftbutton)
 		self.hLayout.addWidget(self.slider)
 		self.hLayout.addWidget(self.box)
+		self.hLayout.addWidget(self.rightbutton)
 		self.setLayout(self.hLayout)
 		
 		self.slider.valueChanged.connect(self._sliderChanged)
-		self.box.textChanged.connect(self._textChanged)
+		self.box.editingFinished.connect(self._textChanged)
 		self.setOrientation(QtCore.Qt.Horizontal)
+
+		# Connect release so tracking works as expected
+		self.slider.sliderReleased.connect(self._sliderReleased)
+
+	def _addone(self):
+		self.value = self.value + 1
+		self.valueChanged.emit(self.value)
+	def _subone(self):
+		self.value = self.value - 1
+		self.valueChanged.emit(self.value)
+
+	def _sliderReleased(self):
+		print 'Released'
+		self.sliderReleased.emit(self.slider.value)
+
+	def setTracking(self,val):
+		print 'Tracking set to {}'.format(val)
+		self._tracking=val
 
 	def setMaximum(self,val):
 		self.slider.setMaximum(val)
-		# self.v = QtGui.QIntValidator(self.slider.minimum(),self.slider.maximum(),parent=None)
-		self.v = QtGui.QIntValidator()
 		self.v.setRange(self.slider.minimum(),self.slider.maximum())
 		self.box.setValidator(self.v)
 
 	def setMinimum(self,val):
 		self.slider.setMinimum(val)
-		self.v = QtGui.QIntValidator()
 		self.v.setRange(self.slider.minimum(),self.slider.maximum())
 		self.box.setValidator(self.v)
 
 	def _sliderChanged(self,val):
 		self.box.setText(str(val))
+		if self._tracking:
+			try:
+				self.slider.sliderReleased.disconnect()
+			except:
+				pass
+			self.valueChanged.emit(val)
+		else:
+			try:
+				self.slider.sliderReleased.disconnect()
+			except:
+				pass
+			self.slider.sliderReleased.connect(self._sliderChanged_notracking)
+
+	def _sliderChanged_notracking(self):
+		val = self.slider.value()
+		# print 'Value to be emitted is {}'.format(val)
 		self.valueChanged.emit(val)
 
-	def _textChanged(self,val):
+	def _textChanged(self):
+		val = self.box.text()
 		self.slider.setValue(int(val))
+		self._sliderChanged_notracking()
 
 	def setOrientation(self,*args,**kwargs):
 		self.slider.setOrientation(*args,**kwargs)
 
-	def _getValue(self,val):
-		return self.slider.value
+	def _getValue(self):
+		return self.slider.value()
 	def _setValue(self,val):
-		self.slider.value = val
-		self.box.text = str(val)
-
+		self.slider.setValue(val)
+		self.box.setText(str(val))
 	value = property(_getValue,_setValue)
 
 	def setValue(self,val):
 		self.slider.setValue(val)
 		self.box.setText(str(val))
+		# self.valueChanged.emit(val)
 
 class Mpl_Plot(_FigureCanvas):
 	def __init__(self,parent=None):
@@ -103,10 +164,15 @@ class Mpl_Image(QtGui.QWidget):
 	def __init__(self, parent=None, rectbool = True, toolbarbool=False, image=None):
 		# Initialize things
 		QtGui.QWidget.__init__(self)
+		self._clim_min=0
+		self._clim_max=3600
+
 		# Add a vertical layout
 		self.vLayout = QtGui.QVBoxLayout()
+
 		# Add a figure
 		self.fig=_mpl.figure.Figure()
+
 		# Add a canvas containing the fig
 		self.canvas = _FigureCanvas(self.fig)
 		_FigureCanvas.setSizePolicy(self.canvas,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
@@ -145,7 +211,8 @@ class Mpl_Image(QtGui.QWidget):
 			self._imgplot = self.ax.imshow(image,interpolation='none')
 			imagemax = _np.max(_np.max(image))
 			print 'Image max is {}.'.format(imagemax)
-			self.fig.colorbar(self._imgplot)
+			self.set_clim(self._clim_min,self._clim_max)
+			# self.fig.colorbar(self._imgplot)
 	image = property(_get_img,_set_img)
 
 	def set_clim(self,clim_min,clim_max):
@@ -153,6 +220,7 @@ class Mpl_Image(QtGui.QWidget):
 			self._clim_min = clim_min
 			self._clim_max = clim_max
 			self._imgplot.set_clim(clim_min,clim_max)
+			self.ax.figure.canvas.draw()
 
 	def on_press(self,event):
 		print 'press'
@@ -198,7 +266,7 @@ class Mpl_Image(QtGui.QWidget):
 			y0 = 0
 			y1 = self.image.shape[0]
 
-		print self.rect
+		# print self.rect
 		self.ax.set_xlim(x0,x1)
 		self.ax.set_ylim(y0,y1)
 
@@ -247,9 +315,8 @@ class Mpl_Image_Plus_Slider(QtGui.QWidget):
 	def zoom_rect(self,border):
 		self._img.zoom_rect(border)
 
-	def set_clim(self,clim_min,clim_max):
-		self._img.set_clim(0,clim_max)
-		self._img.ax.figure.canvas.draw()
+	def set_clim(self,*args,**kwargs):
+		self._img.set_clim(*args,**kwargs)
 
 	def setSliderValue(self,val):
 		self.max_slider.setValue(val)
