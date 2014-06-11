@@ -146,17 +146,6 @@ class Mpl_Plot(_FigureCanvas):
 		# Create axes
 		self.ax=self.fig.add_subplot(111)
 
-	# def _get_img(self):
-	#         return self._image
-	# def _set_img(self,image):
-	#         self._image = image
-	#         if image != None:
-	#                 self._imgplot = self.ax.imshow(image,interpolation='none')
-	#                 imagemax = _np.max(_np.max(image))
-	#                 print 'Image max is {}.'.format(imagemax)
-	#                 self.fig.colorbar(self._imgplot)
-	# image = property(_get_img,_set_img)
-
 class Mpl_Image(QtGui.QWidget):
 	# Signal for when the rectangle is changed
 	rectChanged = QtCore.pyqtSignal(_mpl.patches.Rectangle)
@@ -164,6 +153,7 @@ class Mpl_Image(QtGui.QWidget):
 	def __init__(self, parent=None, rectbool = True, toolbarbool=False, image=None):
 		# Initialize things
 		QtGui.QWidget.__init__(self)
+		self.rectbool=rectbool
 		self._clim_min=0
 		self._clim_max=3600
 
@@ -188,29 +178,26 @@ class Mpl_Image(QtGui.QWidget):
 		# Create axes
 		self.ax=self.fig.add_subplot(111)
 
-		# Add image
-		self.image = image
-
 		# Include rectangle functionality
 		if rectbool:
 			self.fig.canvas.mpl_connect('button_press_event', self.on_press)
 			self.fig.canvas.mpl_connect('button_release_event', self.on_release)
-
-
 			self.rect = _mpl.patches.Rectangle((-10,0),0,3,facecolor='w',edgecolor='r',alpha=0.5)
 
-			# img = _np.random.randn(10,10)
-			# self.ax.imshow(img)
-			self.ax.add_patch(self.rect)
+		# Add image
+		self.image = image
 
 	def _get_img(self):
 		return self._image
 	def _set_img(self,image):
+		self.ax.clear()
 		self._image = image
 		if image != None:
 			self._imgplot = self.ax.imshow(image,interpolation='none')
+			if self.rectbool:
+				self.ax.add_patch(self.rect)
 			imagemax = _np.max(_np.max(image))
-			print 'Image max is {}.'.format(imagemax)
+			# print 'Image max is {}.'.format(imagemax)
 			self.set_clim(self._clim_min,self._clim_max)
 			# self.fig.colorbar(self._imgplot)
 	image = property(_get_img,_set_img)
@@ -237,7 +224,7 @@ class Mpl_Image(QtGui.QWidget):
 		self.ax.figure.canvas.draw()
 
 		self.rectChanged.emit(self.rect)
-		print self.rect
+		# print self.rect
 
 	def zoom_rect(self,border=0):
 		# Get x coordinates
