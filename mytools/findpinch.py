@@ -9,10 +9,19 @@ def findpinch(img,xbounds=None,ybounds=None,step=1,verbose=False):
 	# ======================================
 	# Translate to clearer variables
 	# ======================================
-	xstart = xbounds[0]
-	xstop  = xbounds[1]
-	ystart = ybounds[0]
-	ystop  = ybounds[1]
+	if xbounds is None:
+		xstart=0
+		xstop=img.shape[0]
+	else:
+		xstart = xbounds[0]
+		xstop  = xbounds[1]
+
+	if ybounds is None:
+		ystart=0
+		ystop=img.shape[1]
+	else:
+		ystart = ybounds[0]
+		ystop  = ybounds[1]
 
 	xrange = slice(xstart,xstop)
 	yrange = slice(ystart,ystop)

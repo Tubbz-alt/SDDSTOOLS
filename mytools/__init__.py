@@ -11,12 +11,15 @@ from plot_featured import plot_featured
 # import graphics
 from figure import figure
 from linspacestep import linspacestep
+from linspaceborders import linspaceborders
 from findpinch import findpinch
 from derefdataset import *
 from fitimageslice import fitimageslice
 import E200
 import qt
 from Rectangle import Rectangle
+from picklejar import picklejar
+from LinLsqFit import LinLsqFit
 
 class Error(Exception):
 	"""Base class for exceptions in this module."""
