@@ -146,6 +146,12 @@ class Mpl_Plot(_FigureCanvas):
 		# Create axes
 		self.ax=self.fig.add_subplot(111)
 
+	def plot(self,*args,**kwargs):
+		self.ax.clear()
+		self.ax.plot(*args,**kwargs)
+		self.ax.ticklabel_format(style='sci',scilimits=(0,0),axis='y')
+		self.ax.figure.canvas.draw()
+
 class Mpl_Image(QtGui.QWidget):
 	# Signal for when the rectangle is changed
 	rectChanged = QtCore.pyqtSignal(_mpl.patches.Rectangle)
@@ -292,6 +298,10 @@ class Mpl_Image_Plus_Slider(QtGui.QWidget):
 		maximage = _np.max(_np.max(image))
 		self.max_slider.setMaximum(maximage)
 	image = property(_get_image,_set_image)
+
+	def _get_ax(self):
+		return self._img.ax
+	ax = property(_get_ax)
 
 	def _get_rect(self):
 		return self._img.rect
