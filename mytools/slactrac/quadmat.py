@@ -10,13 +10,19 @@ class Quad(baseclass):
 		self._length = _np.float64(length)
 		self.K1 = _np.float64(K1)
 
-	def getR(self):
-		return quadmat(L=self._length,K1=self.K1,order=self._order)
-	R = property(getR,doc='The transfer matrix R for the quad.')
+	def _get_K1(self):
+		return self._K1
+	def _set_K1(self,val):
+		self._K1 = val
+	K1 = property(_get_K1,_set_K1)
 
-	def get_length(self):
+	def _getR(self):
+		return quadmat(L=self._length,K1=self.K1,order=self._order)
+	R = property(_getR,doc='The transfer matrix R for the quad.')
+
+	def _get_length(self):
 		return self._length
-	length = property(get_length)
+	length = property(_get_length)
 
 	def change_E(self,old_gamma,new_gamma):
 		old_gamma = _np.float64(old_gamma)
