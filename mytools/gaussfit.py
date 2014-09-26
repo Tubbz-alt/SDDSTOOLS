@@ -17,18 +17,27 @@ class GaussResults(object):
 		self.sigma_y=sigma_y
 		self.func=func
 
-	def plot(self,ax):
+	def plot(self,ax,x_mult=None,**kwargs):
 		xmin = min(self.x)
 		xmax = max(self.x)
 		x_fit = _np.linspace(xmin,xmax,1000)
 		y_fit = self.func(x_fit,*self.popt)
 		# _figure('MYTOOLS: Gauss Fit Routine')
+		if x_mult!=None:
+			x     = self.x*x_mult
+			x_fit = x_fit*x_mult
+		else:
+			x=self.x
 		if self.sigma_y!=None:
 			self.sigma_y = self.sigma_y.flatten()
-			ax.errorbar(self.x,self.y,yerr=self.sigma_y,fmt='o-')
-			ax.plot(x_fit,y_fit)
+			# ax.errorbar(x,self.y,yerr=self.sigma_y,fmt='o-')
+			# ax.errorbar(x,self.y,fmt='o-')
+			ax.plot(x,self.y,'o-',**kwargs)
+			ax.plot(x_fit,y_fit,**kwargs)
+			ax.legend(['Data','Fit'])
 		else:
-			ax.plot(x,y,'o-',x_fit,y_fit)
+			ax.plot(x,self.y,'o-',x_fit,y_fit,**kwargs)
+
 
 
 def _gauss(x,amp,mu,sigma,bg=0):
