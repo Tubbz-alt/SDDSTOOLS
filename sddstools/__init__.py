@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 import argparse as _argparse
-from addlabels import addlabels
-from hist2d import hist2d
 from sdds2array import sdds2array
 from sddshist2d import sddshist2d
 from sddsload import sddsload
