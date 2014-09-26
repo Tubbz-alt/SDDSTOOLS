@@ -1,14 +1,15 @@
 import os
 import matplotlib.pyplot as plt
 
-def savefig(top,elepath="figs"):
-	try:
-		os.remove(elepath)
-	except OSError as e:
-		# pass
-		try:
-			os.mkdir(elepath)
-		except:
-			pass
-	top = ''.join([elepath,'/',top])
-	plt.savefig('{}.eps'.format(top).replace(" ","").replace("\n",""))
+def savefig(filename,path="figs"):
+	# try:
+	#         os.remove(path)
+	# except OSError as e:
+	#         try:
+	#                 os.mkdir(path)
+	#         except:
+	#                 pass
+	if not os.path.exists(path):
+		os.makedirs(path)
+	filename = ''.join([path,'/',filename])
+	plt.savefig('{}.eps'.format(filename).replace(" ","").replace("\n",""))
