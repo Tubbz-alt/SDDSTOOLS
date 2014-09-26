@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-import sdds.sddsdata as sddsdata
 import sdds
+sddsdata=sdds.sddsdata
 import sys, time
 # from collections import deque
 import numpy as np
