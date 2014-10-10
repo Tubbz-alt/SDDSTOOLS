@@ -20,6 +20,7 @@ import E200
 from Rectangle import Rectangle
 from picklejar import picklejar
 from LinLsqFit import LinLsqFit
+from create_group import create_group
 
 class Error(Exception):
 	"""Base class for exceptions in this module."""
