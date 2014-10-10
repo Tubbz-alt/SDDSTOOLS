@@ -8,7 +8,8 @@ class Button(object):
 		self.text           = None
 		self.ButtonRole     = None
 
-		self.buttontype = kwargs.pop('buttontype',None)
+		self.button_default = kwargs.pop('default',False)
+		self.button_escape = kwargs.pop('escape',False)
 
 		argnum  = _np.size(args) + _np.size(kwargs.values())
 		allargs = _np.array(args,dtype=object)
@@ -48,13 +49,10 @@ class ButtonMsg(QtGui.QMessageBox):
 					val = Button(val)
 				self.btnarray[i] = self._addbutton(val)
 				
-				if val.buttontype == 'Default':
+				if val.button_default:
 					self.msgbox.setDefaultButton(self.btnarray[i])
-				elif val.buttontype == 'Escape':
+				if val.button_escape:
 					self.msgbox.setEscapeButton(self.btnarray[i])
-				elif val.buttontype != None:
-					raise ValueError('The button''s type must be ''Default'' or ''Escape'', cannot be {}'.format(val.buttontype))
-
 		self.msgbox.exec_()
 
 	def _addbutton(self,button):

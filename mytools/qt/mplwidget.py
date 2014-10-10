@@ -232,36 +232,70 @@ class Mpl_Image(QtGui.QWidget):
 		self.rectChanged.emit(self.rect)
 		# print self.rect
 
-	def zoom_rect(self,border=0):
+	def zoom_rect(self,border=None,border_px=None):
+		# ======================================
 		# Get x coordinates
+		# ======================================
 		x0 = self.rect.get_x()
 		width = self.rect.get_width()
 		x1 = x0+width
 
+		# ======================================
 		# Get y coordinates
+		# ======================================
 		y0 = self.rect.get_y()
 		height = self.rect.get_height()
 		y1 = y0+height
 
-		# Add border
-		x0 = x0 - border
-		x1 = x1 + border
-		y0 = y0 - border
-		y1 = y1 + border
+		# ======================================
+		# Validate borders
+		# ======================================
+		if border_px == None and border != None:
+			xborder = border[0]*width
+			yborder = border[1]*height
+		elif border_px != None and border == None:
+			xborder = border_px[0]
+			yborder = border_px[1]
+		elif border_px == None and border == None:
+			raise IOError('No border info specified!')
+		elif border_px != None and border != None:
+			raise IOError('Too much border info specified, both border_px and border!')
+		else:
+			raise IOError('End of the line!')
 
-		# Validate coordinates to prevent unPythonic crash
+		# ======================================
+		# Add borders
+		# ======================================
+		x0 = x0 - xborder
+		x1 = x1 + xborder
+		y0 = y0 - yborder
+		y1 = y1 + yborder
+
+		# ======================================
+		# Validate coordinates to prevent 
+		# unPythonic crash
+		# ======================================
 		if not ((0 <= x0 and x0 <= self.image.shape[1]) and (0 <= x1 and x1 <= self.image.shape[1])):
 			print 'X issue'
+			print 'Requested: x=({},{})'.format(x0,x1)
 			x0 = 0
 			x1 = self.image.shape[1]
 		if not ((0 <= y0 and y0 <= self.image.shape[0]) and (0 <= y1 and y1 <= self.image.shape[0])):
 			print 'y issue'
+			print 'Requested: y=({},{})'.format(y0,y1)
 			y0 = 0
 			y1 = self.image.shape[0]
 
-		# print self.rect
+		# ======================================
+		# Set viewable area
+		# ======================================
 		self.ax.set_xlim(x0,x1)
 		self.ax.set_ylim(y0,y1)
+
+		# ======================================
+		# Redraw canvas to show updates
+		# ======================================
+		self.ax.figure.canvas.draw()
 
 class Mpl_Image_Plus_Slider(QtGui.QWidget):
 	# def __init__(self, parent=None, **kwargs):
@@ -309,8 +343,8 @@ class Mpl_Image_Plus_Slider(QtGui.QWidget):
 		self._img.rect(rect)
 	rect = property(_get_rect,_set_rect)
 
-	def zoom_rect(self,border):
-		self._img.zoom_rect(border)
+	def zoom_rect(self,border=None,border_px=None):
+		self._img.zoom_rect(border,border_px)
 
 	def set_clim(self,*args,**kwargs):
 		self._img.set_clim(*args,**kwargs)
