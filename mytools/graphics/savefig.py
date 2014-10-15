@@ -16,6 +16,6 @@ def savefig(filename,path="figs",fig=None,ext='eps',**kwargs):
 	final_filename = '{}.{}'.format(filename,ext).replace(" ","").replace("\n","")
 
 	if fig != None:
-		fig.savefig(final_filename,**kwargs)
+		fig.savefig(final_filename,bbox_inches='tight',**kwargs)
 	else:
-		plt.savefig(final_filename,**kwargs)
+		plt.savefig(final_filename,bbox_inches='tight',**kwargs)
