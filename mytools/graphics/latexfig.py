@@ -3,7 +3,14 @@ import shutil
 import shlex
 import subprocess
 
-def latexfig(textstr,filename,environment='align*'):
+def latexfig(textstr,filename,environment='align*',env_curly=None):
+	# ======================================
+	# Validate Extension
+	# ======================================
+	split = os.path.splitext(filename)
+	if split[1] != '.pdf':
+		raise IOError('Final filename must have extension ''pdf'', requested: {}'.format(filename))
+
 	# ======================================
 	# Get final destination
 	# ======================================
@@ -19,17 +26,22 @@ def latexfig(textstr,filename,environment='align*'):
 	# ======================================
 	template=r'''
 \documentclass[10pt]{{article}}
-\usepackage{{amssymb,amsmath,booktabs}}
+\usepackage{{amssymb,amsmath,booktabs,multirow}}
 
 \pagestyle{{empty}}
 
 \begin{{document}}
-\begin{{{environment}}}
+\begin{{{environment}}}{env_curly}
 {textstr}
 \end{{{environment}}}
 \end{{document}}
 '''
-	fullwrite=template.format(textstr=textstr,environment=environment)
+	if env_curly!=None:
+		env_curly = '{{{}}}'.format(env_curly)
+	else:
+		env_curly = ''
+
+	fullwrite=template.format(textstr=textstr,environment=environment,env_curly=env_curly)
 
 	# ======================================
 	# Get file names for intermediate files
