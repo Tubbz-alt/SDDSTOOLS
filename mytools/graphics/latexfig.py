@@ -15,6 +15,11 @@ def latexfig(textstr,filename,environment='align*',env_curly=None):
 	# Get final destination
 	# ======================================
 	final_path = os.path.abspath(filename)
+	try:
+		os.mkdir(os.path.dirname(final_path))
+	except OSError as e:
+		if e.errno != 17:
+			raise
 	
 	# ======================================
 	# Get current directory

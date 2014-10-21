@@ -9,9 +9,6 @@ class LinLsqFit(object):
 
 		self._force_recalc()
 
-		# print y_unweighted.shape
-		# print X_unweighted.shape
-		# print y_error.shape
 		self.y_unweighted=y_unweighted
 		self.y_error=y_error
 		self.X_unweighted = X_unweighted
@@ -29,7 +26,7 @@ class LinLsqFit(object):
 		# self._emit = None
 		# self._twiss=None
 		for resetstr in self._resetlist:
-			print resetstr
+			# print resetstr
 			setattr(self,resetstr,None)
 
 	# ======================================
@@ -66,7 +63,7 @@ class LinLsqFit(object):
 	# X (calculated)
 	# ======================================
 	def _get_X(self):
-		if self._X == None:
+		if self._X is None:
 			X = _copy.deepcopy(self.X_unweighted)
 			# print 'X shape is {}'.format(X.shape)
 			for i,el in enumerate(X):
@@ -80,7 +77,7 @@ class LinLsqFit(object):
 	# y (calculated)
 	# ======================================
 	def _get_y(self):
-		if self._y==None:
+		if self._y is None:
 			self._y = self.y_unweighted/self.y_error
 		return self._y
 	y = property(_get_y)
@@ -89,7 +86,7 @@ class LinLsqFit(object):
 	# y_fit (y from fit)
 	# ======================================
 	def _get_y_fit(self):
-		if self._y_fit==None:
+		if self._y_fit is None:
 			self._y_fit = _np.dot(self.X_unweighted,self.beta)
 		return self._y_fit
 	y_fit = property(_get_y_fit)
@@ -98,7 +95,7 @@ class LinLsqFit(object):
 	# beta (calculated)
 	# ======================================
 	def _get_beta(self):
-		if self._beta==None:
+		if self._beta is None:
 			# This is the linear least squares matrix formalism
 			self._beta = _np.dot(_np.linalg.pinv(self.X) , self.y)
 		return self._beta
@@ -108,7 +105,7 @@ class LinLsqFit(object):
 	# covar (calculated)
 	# ======================================
 	def _get_covar(self):
-		if self._covar==None:
+		if self._covar is None:
 			self._covar=_np.linalg.inv(_np.dot(_np.transpose(self.X),self.X))
 		return self._covar
 	covar = property(_get_covar)
@@ -117,7 +114,7 @@ class LinLsqFit(object):
 	# chisq_red (calculated)
 	# ======================================
 	def _get_chisq_red(self):
-		if self._chisq_red==None:
+		if self._chisq_red is None:
 			self._chisq_red = _mt.chisquare(self.y_unweighted.transpose(),_np.dot(self.X_unweighted,self.beta),self.y_error,ddof=3,verbose=False)
 		return self._chisq_red
 	chisq_red=property(_get_chisq_red)

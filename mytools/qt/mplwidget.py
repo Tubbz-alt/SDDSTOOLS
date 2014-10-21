@@ -198,7 +198,7 @@ class Mpl_Image(QtGui.QWidget):
 	def _set_img(self,image):
 		self.ax.clear()
 		self._image = image
-		if image != None:
+		if image is not None:
 			self._imgplot = self.ax.imshow(image,interpolation='none')
 			if self.rectbool:
 				self.ax.add_patch(self.rect)
@@ -209,7 +209,7 @@ class Mpl_Image(QtGui.QWidget):
 	image = property(_get_img,_set_img)
 
 	def set_clim(self,clim_min,clim_max):
-		if self.image != None:
+		if self.image is not None:
 			self._clim_min = clim_min
 			self._clim_max = clim_max
 			self._imgplot.set_clim(clim_min,clim_max)
@@ -250,15 +250,15 @@ class Mpl_Image(QtGui.QWidget):
 		# ======================================
 		# Validate borders
 		# ======================================
-		if border_px == None and border != None:
+		if (border_px is None) and (border is not None):
 			xborder = border[0]*width
 			yborder = border[1]*height
-		elif border_px != None and border == None:
+		elif (border_px is not None) and (border is None):
 			xborder = border_px[0]
 			yborder = border_px[1]
-		elif border_px == None and border == None:
+		elif (border_px is None) and (border is None):
 			raise IOError('No border info specified!')
-		elif border_px != None and border != None:
+		elif (border_px is not None) and (border is not None):
 			raise IOError('Too much border info specified, both border_px and border!')
 		else:
 			raise IOError('End of the line!')

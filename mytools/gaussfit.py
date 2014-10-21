@@ -23,12 +23,12 @@ class GaussResults(object):
 		x_fit = _np.linspace(xmin,xmax,1000)
 		y_fit = self.func(x_fit,*self.popt)
 		# _figure('MYTOOLS: Gauss Fit Routine')
-		if x_mult!=None:
+		if x_mult is not None:
 			x     = self.x*x_mult
 			x_fit = x_fit*x_mult
 		else:
 			x=self.x
-		if self.sigma_y!=None:
+		if self.sigma_y is not None:
 			self.sigma_y = self.sigma_y.flatten()
 			# ax.errorbar(x,self.y,yerr=self.sigma_y,fmt='o-')
 			# ax.errorbar(x,self.y,fmt='o-')
@@ -59,7 +59,7 @@ def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_boo
 	x       = x.flatten()
 	y       = y.flatten()
 
-	use_error = ( sigma_y != None )
+	use_error = ( sigma_y is not None )
 
 	# Determine whether to use the variance or std dev form
 	# in the gaussian equation
@@ -76,7 +76,7 @@ def gaussfit(x, y, sigma_y=None, plot=True, p0=None, verbose=False, variance_boo
 			func = _gauss_nobg
 
 	# Determine initial guesses if none are input
-	if ( p0 == None):
+	if (p0 is None):
 		amp = max(y)
 		mu  = sum(x*y)/sum(y)
 		rms = _np.sqrt(sum(x**2 * y)/sum(y))

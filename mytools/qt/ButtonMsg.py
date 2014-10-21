@@ -39,10 +39,10 @@ class ButtonMsg(QtGui.QMessageBox):
 		if infotext is not None:
 			self.msgbox.setInformativeText(infotext)
 
-		if title != None:
+		if (title is not None):
 			self.msgbox.setWindowTitle(title)
 
-		if buttons != None:
+		if (buttons is not None):
 			self.btnarray = _np.empty(_np.size(buttons),dtype=object)
 			for i,val in enumerate(buttons):
 				if not isinstance(val,Button):
@@ -56,7 +56,7 @@ class ButtonMsg(QtGui.QMessageBox):
 		self.msgbox.exec_()
 
 	def _addbutton(self,button):
-		if button.standardbutton == None:
+		if (button.standardbutton is None):
 			added_button = self.msgbox.addButton(button.text,button.ButtonRole)
 		else:
 			added_button = self.msgbox.addButton(button.standardbutton)
