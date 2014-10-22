@@ -8,18 +8,20 @@ from gaussfit import _gaussvar
 from chisquare import chisquare
 from curve_fit_unscaled import curve_fit_unscaled
 from plot_featured import plot_featured
-# import graphics
+import graphics
 from figure import figure
 from linspacestep import linspacestep
 from linspaceborders import linspaceborders
 from findpinch import findpinch
 from derefdataset import *
 from fitimageslice import fitimageslice
-import E200
 import qt
+import E200
 from Rectangle import Rectangle
 from picklejar import picklejar
 from LinLsqFit import LinLsqFit
+from create_group import create_group
+import classes
 
 class Error(Exception):
 	"""Base class for exceptions in this module."""

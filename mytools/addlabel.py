@@ -1,7 +1,9 @@
 import matplotlib.pyplot as plt
 
-def addlabel(toplabel=None,xlabel=None,ylabel=None,axes=None,clabel=None,cb=None):
+def addlabel(toplabel=None,xlabel=None,ylabel=None,axes=None,clabel=None,cb=None,windowlabel=None,fig=None):
 	"""Adds labels to a plot."""
+	if windowlabel!=None and fig!=None:
+		fig.canvas.set_window_title(windowlabel)
 
 	if axes is not None:
 		if toplabel is not None:

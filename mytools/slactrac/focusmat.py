@@ -3,13 +3,12 @@ import numpy as _np
 from driftmat import driftmat
 from baseclass import baseclass
 
-class Quad(baseclass):
-	def __init__(self,length=0,K1=0,order=1,name=None):
-		self.name   = name
-		self._order  = int(order)
-		self._type   = 'quad'
+class Focus(baseclass):
+	def __init__(self,length=0,K1=0,order=1):
+		self._order = int(order)
+		self._type = 'focus'
 		self._length = _np.float64(length)
-		self.K1      = _np.float64(K1)
+		self.K1 = _np.float64(K1)
 
 	def _get_K1(self):
 		return self._K1
@@ -18,8 +17,8 @@ class Quad(baseclass):
 	K1 = property(_get_K1,_set_K1)
 
 	def _getR(self):
-		return quadmat(L=self._length,K1=self.K1,order=self._order)
-	R = property(_getR,doc='The transfer matrix R for the quad.')
+		return focusmat(L=self._length,K1=self.K1,order=self._order)
+	R = property(_getR,doc='The transfer matrix R for the focus.')
 
 	def _get_length(self):
 		return self._length
@@ -30,7 +29,7 @@ class Quad(baseclass):
 		new_gamma = _np.float64(new_gamma)
 		self.K1 *= old_gamma / new_gamma
 
-def quadmat(K1=0,L=0,order=1):
+def focusmat(K1=0,L=0,order=1):
 	if ( K1 == 0 ):
 		R = driftmat(L,order)
 	else:
@@ -44,10 +43,7 @@ def quadmat(K1=0,L=0,order=1):
 				[[ cos_rtK_L    , sin_rtK_L/rtK ],
 				[  -rtK*sin_rtK_L , cos_rtK_L   ]]
 			)
-		R_d = _np.array(
-				[[ cosh_rtK_L   , sinh_rtK_L/rtK ],
-				[  rtK*sinh_rtK_L , cosh_rtK_L   ]]
-			)
+		R_d = R_f
 		if ( K1 > 0 ):
 			R = _np.zeros([6,6])
 			R[0:2,0:2] = R_f
